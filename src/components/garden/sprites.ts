@@ -156,34 +156,50 @@ export const DISC_9 = [
 ];
 
 /**
- * Scenery bitmaps — pots and bushes. Unlike flowers these carry their own
- * fixed palette rather than taking the player's colour, so they resolve
- * through sceneryColour rather than charColour.
- *
- *   r  pot rim      b  pot body     g  pot highlight
- *   d  leaf dark    m  leaf mid     l  leaf highlight
+ * Scenery bitmaps — pots and bushes. Unlike flowers, which take the visitor's
+ * chosen colour, each of these carries its own palette, so a variant is a
+ * bitmap plus a colour map and nothing else.
  */
-const SCENERY_PALETTE: Record<string, string> = {
-  r: "#a85c3a",
-  b: "#c1714a",
-  g: "#d78a63",
-  d: "#6b8f5a",
-  m: "#86a86b",
-  l: "#a3c285",
+export type Bitmap = {
+  name: string;
+  w: number;
+  h: number;
+  rows: string[];
+  palette: Record<string, string>;
 };
 
-export function sceneryColour(ch: string): string | null {
-  return SCENERY_PALETTE[ch] ?? null;
-}
+const TERRACOTTA = { r: "#a85c3a", b: "#c1714a", g: "#d78a63" };
+const STONE = { r: "#8d9199", b: "#a8adb5", g: "#c3c8cf" };
+const GLAZED = { r: "#35608f", b: "#4a7fb5", g: "#6fa3d2" };
+const LEAVES = { d: "#6b8f5a", m: "#86a86b", l: "#a3c285" };
 
-export const POT = ["rrrrrrr", ".bbgbb.", ".bbbbb.", "..bbb.."];
-export const POT_W = 7;
-export const POT_H = 4;
-/** How far a potted flower rises so its stem leaves the rim, in sprite pixels. */
-export const POT_LIFT = 3;
-
-export const BUSHES: { w: number; h: number; rows: string[] }[] = [
+export const POTS: Bitmap[] = [
   {
+    name: "Terracotta",
+    w: 7,
+    h: 4,
+    rows: ["rrrrrrr", ".bbgbb.", ".bbbbb.", "..bbb.."],
+    palette: TERRACOTTA,
+  },
+  {
+    name: "Stone",
+    w: 7,
+    h: 5,
+    rows: ["rrrrrrr", ".bbgbb.", ".bbbbb.", ".bbbbb.", "..bbb.."],
+    palette: STONE,
+  },
+  {
+    name: "Glazed",
+    w: 9,
+    h: 4,
+    rows: ["rrrrrrrrr", ".bbbgbbb.", "..bbbbb..", "...bbb..."],
+    palette: GLAZED,
+  },
+];
+
+export const BUSHES: Bitmap[] = [
+  {
+    name: "Round",
     w: 13,
     h: 8,
     rows: [
@@ -196,8 +212,10 @@ export const BUSHES: { w: number; h: number; rows: string[] }[] = [
       "..ddmmmmmdd..",
       "....dddd.....",
     ],
+    palette: LEAVES,
   },
   {
+    name: "Small",
     w: 9,
     h: 6,
     rows: [
@@ -208,5 +226,26 @@ export const BUSHES: { w: number; h: number; rows: string[] }[] = [
       ".dmmmmmd.",
       "...ddd...",
     ],
+    palette: LEAVES,
+  },
+  {
+    name: "Berry",
+    w: 11,
+    h: 7,
+    rows: [
+      "...ddddd...",
+      ".ddmmmmmdd.",
+      "dmmmBmmmmmd",
+      "dmmmmmmBmmd",
+      "dmmBmmmmmmd",
+      ".dmmmmmmmd.",
+      "...ddddd...",
+    ],
+    palette: { ...LEAVES, B: "#c94f6d" },
   },
 ];
+
+/** Resolve a scenery char against that item's own palette. */
+export function bitmapColour(item: Bitmap, ch: string): string | null {
+  return item.palette[ch] ?? null;
+}

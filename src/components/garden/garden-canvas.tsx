@@ -6,14 +6,11 @@ import { breezeAt } from "./breeze";
 import {
   BUSHES,
   FLOWERS,
-  POT,
-  POT_H,
-  POT_LIFT,
-  POT_W,
+  POTS,
   SPRITE_H,
   SPRITE_W,
+  bitmapColour,
   charColour,
-  sceneryColour,
   type FlowerId,
 } from "./sprites";
 
@@ -68,7 +65,8 @@ type Plant = {
   plantedAt: number;
   /** Per-flower phase offset, so a gust does not move them in lockstep. */
   jitter: number;
-  potted: boolean;
+  /** Index into POTS, or undefined for straight into the soil. */
+  pot?: number;
   /** When set, this is scenery drawn from BUSHES rather than a flower. */
   bush?: number;
 };
@@ -155,7 +153,7 @@ function drawPlants(g: Graphics, plants: Plant[], now: number) {
         Math.ceil(progress * bush.h),
         // Bushes are dense and low, so they barely move.
         breezeAt(now, p.x, p.jitter) * 0.4,
-        sceneryColour,
+        (ch) => bitmapColour(bush, ch),
       );
       continue;
     }
@@ -163,8 +161,10 @@ function drawPlants(g: Graphics, plants: Plant[], now: number) {
     const rows = FLOWERS.find((f) => f.id === p.flower)?.rows;
     if (!rows) continue;
 
-    // A potted flower sits up on the rim rather than in the soil.
-    const lift = p.potted ? POT_LIFT * UNIT : 0;
+    // A potted flower sits up on the rim rather than in the soil. Each pot is
+    // a different height, so the lift comes from the chosen one.
+    const pot = p.pot === undefined ? null : POTS[p.pot];
+    const lift = pot ? (pot.h - 1) * UNIT : 0;
     drawSprite(
       g,
       rows,
@@ -177,18 +177,18 @@ function drawPlants(g: Graphics, plants: Plant[], now: number) {
       (ch) => charColour(ch, p.colour),
     );
 
-    if (p.potted) {
+    if (pot) {
       // Drawn after the flower so the rim occludes the base of the stem.
       drawSprite(
         g,
-        POT,
-        POT_W,
-        POT_H,
-        Math.round(p.x - (POT_W * UNIT) / 2),
-        Math.round(p.y - POT_H * UNIT),
-        POT_H,
+        pot.rows,
+        pot.w,
+        pot.h,
+        Math.round(p.x - (pot.w * UNIT) / 2),
+        Math.round(p.y - pot.h * UNIT),
+        pot.h,
         0,
-        sceneryColour,
+        (ch) => bitmapColour(pot, ch),
       );
     }
   }
@@ -281,10 +281,10 @@ const CLUSTERS: {
  */
 const BUSHES_PLACED: [number, number, number, number][] = [
   [1, 12, 0, 0],
-  [1, 17, 1, 6],
-  [3, 19, 0, 10],
-  [6, 19, 1, 12],
-  [8, 1, 0, -6],
+  [1, 17, 2, 6],
+  [3, 19, 1, 10],
+  [6, 19, 0, 12],
+  [8, 1, 2, -6],
   [11, 3, 1, -14],
   [11, 9, 0, 4],
 ];
@@ -298,19 +298,31 @@ function cellPlant(
   plantedAt: number,
   plane: PlaneId,
   dx = 0,
-  opts: { potted?: boolean; bush?: number } = {},
+  opts: { pot?: number; bush?: number } = {},
 ): Plant {
   const t = (row + 0.5) / ROWS;
   const e = edgesAt(t, plane);
+  let x = e.left + ((col + 0.5) / COLS) * (e.right - e.left) + dx;
+
+  // Bushes are wide, so a placement near the rim would be clipped by the edge
+  // of the canvas. Keep the whole sprite on the plane rather than trusting the
+  // hand-written coordinates to stay inside it.
+  if (opts.bush !== undefined) {
+    const halfW = (BUSHES[opts.bush].w * UNIT) / 2;
+    const lo = Math.max(halfW, e.left + halfW);
+    const hi = Math.min(GW - halfW, e.right - halfW);
+    x = Math.min(Math.max(x, lo), Math.max(lo, hi));
+  }
+
   return {
     flower,
     colour,
-    x: e.left + ((col + 0.5) / COLS) * (e.right - e.left) + dx,
+    x,
     y: t * GH,
     t,
     plantedAt,
     jitter: (((row * 7 + col * 13 + Math.round(dx)) % 10) + 10) % 10 / 10 * Math.PI * 2,
-    potted: opts.potted ?? false,
+    pot: opts.pot,
     bush: opts.bush,
   };
 }
@@ -348,24 +360,24 @@ function seedGarden(now: number, plane: PlaneId): Plant[] {
   return out;
 }
 
+export type Brush =
+  | { kind: "flower"; flower: FlowerId; colour: string; pot: number | null }
+  | { kind: "bush"; bush: number };
+
 export function GardenCanvas({
-  flower,
-  colour,
-  potted = false,
+  brush,
   plane = "trapezoid",
   onPlant,
 }: {
-  flower: FlowerId;
-  colour: string;
-  potted?: boolean;
+  brush: Brush;
   plane?: PlaneId;
-  /** Fired with the wall-clock time whenever the visitor plants something. */
+  /** Fired with the wall-clock time whenever the visitor places something. */
   onPlant?: (at: number) => void;
 }) {
   const hostRef = useRef<HTMLDivElement>(null);
   // Kept in refs so the Pixi loop reads the latest selection without re-init.
-  const selection = useRef({ flower, colour, potted, onPlant });
-  selection.current = { flower, colour, potted, onPlant };
+  const selection = useRef({ brush, onPlant });
+  selection.current = { brush, onPlant };
 
   useEffect(() => {
     const host = hostRef.current;
@@ -428,16 +440,26 @@ export function GardenCanvas({
           Math.max(0, Math.floor(((x - e.left) / (e.right - e.left)) * COLS)),
         );
 
-        plants.push({
-          flower: selection.current.flower,
-          colour: selection.current.colour,
+        const current = selection.current.brush;
+        const jitter = ((col * 13 + row * 7) % 10) / 10 * Math.PI * 2;
+        const base = {
+          colour: current.kind === "flower" ? current.colour : "#ffffff",
           x: e.left + ((col + 0.5) / COLS) * (e.right - e.left),
           y: rowT * GH,
           t: rowT,
-          potted: selection.current.potted,
           plantedAt: performance.now(),
-          jitter: ((col * 13 + row * 7) % 10) / 10 * Math.PI * 2,
-        });
+          jitter,
+        };
+
+        plants.push(
+          current.kind === "bush"
+            ? { ...base, flower: "daisy", bush: current.bush }
+            : {
+                ...base,
+                flower: current.flower,
+                pot: current.pot ?? undefined,
+              },
+        );
         selection.current.onPlant?.(Date.now());
       };
 
