@@ -10,6 +10,7 @@ export type FlowerId = "daisy" | "tulip" | "poppy" | "bell" | "sprout";
 
 export const STEM = "#7a9068";
 export const LEAF = "#93aa79";
+export const LEAF_LIGHT = "#b3c79c";
 export const CENTRE_BRIGHT = "#ffd166";
 export const CENTRE_DARK = "#2b1a0a";
 
@@ -25,8 +26,8 @@ export const FLOWERS: { id: FlowerId; name: string; rows: string[] }[] = [
       ".ppppp.",
       "..ppp..",
       "...s...",
-      "..Ls...",
-      "...sL..",
+      ".lLs...",
+      "...sLl.",
       "...s...",
     ],
   },
@@ -41,8 +42,8 @@ export const FLOWERS: { id: FlowerId; name: string; rows: string[] }[] = [
       ".ppppp.",
       "..ppp..",
       "...s...",
-      "..Ls...",
-      "...sL..",
+      ".lLs...",
+      "...sLl.",
       "...s...",
     ],
   },
@@ -57,8 +58,8 @@ export const FLOWERS: { id: FlowerId; name: string; rows: string[] }[] = [
       ".ppppp.",
       "..ppp..",
       "...s...",
-      "..Ls...",
-      "...sL..",
+      ".lLs...",
+      "...sLl.",
       "...s...",
     ],
   },
@@ -73,8 +74,8 @@ export const FLOWERS: { id: FlowerId; name: string; rows: string[] }[] = [
       ".ppppp.",
       "..ppp..",
       "...s...",
-      "..Ls...",
-      "...sL..",
+      ".lLs...",
+      "...sLl.",
       "...s...",
     ],
   },
@@ -89,8 +90,8 @@ export const FLOWERS: { id: FlowerId; name: string; rows: string[] }[] = [
       "..LsL..",
       ".LLsLL.",
       "...s...",
-      "..Ls...",
-      "...sL..",
+      ".lLs...",
+      "...sLl.",
       "...s...",
     ],
   },
@@ -124,6 +125,8 @@ export function charColour(ch: string, petal: string): string | null {
       return STEM;
     case "L":
       return LEAF;
+    case "l":
+      return LEAF_LIGHT;
     default:
       return null;
   }

@@ -176,20 +176,34 @@ function drawFence(g: Graphics, plane: PlaneId) {
     (f) => ({ x: edgesAt(f, plane).right, y: yAt(f), t: f }),
   ];
 
+  // Posts are spaced by distance travelled along each edge, not by sample
+  // index. The back edge is far shorter than the diagonal, so counting samples
+  // crowded its posts together while the left edge's sat comfortably apart.
+  const POST_SPACING = 19;
+
   for (const edge of edges) {
+    let sinceLastPost = POST_SPACING; // start with a post at the corner
+    let prev: { x: number; y: number } | null = null;
+
     for (let i = 0; i <= SAMPLES; i++) {
       const p = edge(i / SAMPLES);
       const h = 7 + Math.round(4 * p.t);
       const x = Math.round(p.x);
       const y = Math.round(p.y);
 
+      if (prev) {
+        sinceLastPost += Math.hypot(p.x - prev.x, p.y - prev.y);
+      }
+      prev = { x: p.x, y: p.y };
+
       // Two rails, drawn as a dense run of pixels so they follow the edge.
       g.rect(x, y - h + 3, 1, 1).fill(RAIL);
       g.rect(x, y - h + 6, 1, 1).fill(RAIL);
 
-      if (i % 12 === 0) {
+      if (sinceLastPost >= POST_SPACING) {
         g.rect(x, y - h, 2, h).fill(POST);
         g.rect(x, y - 1, 2, 1).fill(POST_SHADE);
+        sinceLastPost = 0;
       }
     }
   }

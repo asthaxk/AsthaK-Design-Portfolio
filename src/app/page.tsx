@@ -8,7 +8,7 @@ export default function Home() {
     <>
       <SiteHeader />
 
-      <section className="relative flex flex-1 items-start overflow-hidden">
+      <section className="relative flex flex-1 items-center overflow-hidden">
         {/* Figma: #f9efdd rect, 100px blur — soft cream field that falls off at the edges */}
         <div
           aria-hidden
@@ -23,9 +23,9 @@ export default function Home() {
             backgroundImage:
               "radial-gradient(rgba(0,0,0,0.3) 1px, transparent 1px)",
             backgroundSize: "var(--spacing-dot) var(--spacing-dot)",
-            // Centred horizontally so the columns line up with the centred
-            // rail; the section's own top edge anchors the rows.
-            backgroundPosition: "center top",
+            // Centred on both axes, matching the centred rail and the
+            // vertically centred hero, so content keeps the grid's phase.
+            backgroundPosition: "center center",
           }}
         />
 

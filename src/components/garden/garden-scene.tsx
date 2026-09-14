@@ -147,11 +147,14 @@ export function GardenScene() {
             </button>
             <LastPlanted at={lastPlanted} />
           </div>
-          {/* The post that drives the slab into the ground below. */}
+          {/* Two legs driving the slab into the ground below. */}
           <span
             aria-hidden
-            className="absolute top-full left-1/2 h-[26px] w-[7px] -translate-x-1/2 border-x-2 border-[#6f553a] bg-[#a3835c]"
-          />
+            className="absolute top-full left-1/2 flex -translate-x-1/2 gap-16"
+          >
+            <span className="h-[26px] w-[7px] border-x-2 border-[#6f553a] bg-[#a3835c]" />
+            <span className="h-[26px] w-[7px] border-x-2 border-[#6f553a] bg-[#a3835c]" />
+          </span>
         </div>
       </div>
 

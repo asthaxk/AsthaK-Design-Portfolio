@@ -23,8 +23,10 @@
      on a dot column at every viewport width. */
   --spacing-rail: 1248px;
 
-  /* Accent — the pink from the logo's bloom. */
-  --color-accent: #f72585;
+  /* Button fill and the hard block beneath it. Two steps apart on the grey
+     ramp so the offset shadow still separates from the fill. */
+  --color-accent: #344054;
+  --color-accent-shadow: #101828;
 }
 
 body {
