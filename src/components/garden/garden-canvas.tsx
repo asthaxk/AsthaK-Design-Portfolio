@@ -342,15 +342,7 @@ const CLUSTERS: {
  * a border so the turf does not run flat to its outline.
  * [row, column, bush variant, x offset in pixels]
  */
-const BUSHES_PLACED: [number, number, number, number][] = [
-  [1, 12, 0, 0],
-  [1, 17, 2, 6],
-  [3, 19, 1, 10],
-  [6, 19, 0, 12],
-  [8, 1, 2, -6],
-  [11, 3, 1, -14],
-  [11, 9, 0, 4],
-];
+const BUSHES_PLACED: [number, number, number, number][] = [];
 
 /** Place a flower on the perspective grid at the given row and column. */
 function cellPlant(

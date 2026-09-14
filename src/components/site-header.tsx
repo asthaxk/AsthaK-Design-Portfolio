@@ -11,7 +11,7 @@ const NAV = [
 export function SiteHeader() {
   return (
     <header className="border-b border-ink/100">
-      <div className="mx-auto flex h-[clamp(64px,9.8vh,96px)] w-full max-w-rail flex-wrap items-center justify-between gap-y-4 px-4 sm:px-8">
+      <div className="mx-auto flex h-24 w-full max-w-rail flex-wrap items-center justify-between gap-y-4 px-4 sm:px-6 [@media(max-height:800px)]:h-[72px]">
         <Link href="/" className="flex items-center gap-[12px]">
           {/* Figma "logo white" (5:222) — the mark stands alone; its bloom
               overflows the box to inset -22.73%, as percentages so it scales. */}
@@ -44,7 +44,7 @@ export function SiteHeader() {
           </nav>
           <Link
             href="#book-a-call"
-            className="rounded-[8px] border border-cream bg-cream px-[14px] py-[8px] text-[16px] leading-[20px] font-bold whitespace-nowrap text-ink shadow-(--shadow-xs-token) transition-colors hover:bg-white"
+            className="inline-flex items-center justify-center rounded-[3px] bg-accent px-6 py-3 font-pixel text-[12px] leading-[1] font-bold text-white shadow-[4px_4px_0_0_var(--color-ink)] transition-[transform,box-shadow] duration-100 hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0_0_var(--color-ink)] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none whitespace-nowrap"
           >
             Book a Call
           </Link>

@@ -8,7 +8,7 @@ export default function Home() {
     <>
       <SiteHeader />
 
-      <section className="relative flex flex-1 items-center overflow-hidden">
+      <section className="relative flex flex-1 items-start overflow-hidden">
         {/* Figma: #f9efdd rect, 100px blur — soft cream field that falls off at the edges */}
         <div
           aria-hidden
@@ -22,7 +22,10 @@ export default function Home() {
           style={{
             backgroundImage:
               "radial-gradient(rgba(0,0,0,0.3) 1px, transparent 1px)",
-            backgroundSize: "24px 24px",
+            backgroundSize: "var(--spacing-dot) var(--spacing-dot)",
+            // Centred horizontally so the columns line up with the centred
+            // rail; the section's own top edge anchors the rows.
+            backgroundPosition: "center top",
           }}
         />
 
@@ -35,7 +38,7 @@ export default function Home() {
 
         {/* The rail is full width but mostly empty, so it must not swallow
             clicks meant for the garden behind it; the hero column re-enables them. */}
-        <div className="pointer-events-none relative z-10 mx-auto w-full max-w-rail px-4 py-[clamp(24px,5vh,56px)] sm:px-8">
+        <div className="pointer-events-none relative z-10 mx-auto w-full max-w-rail px-4 py-6 sm:px-6 [@media(max-height:800px)]:py-3">
           <Hero />
         </div>
       </section>

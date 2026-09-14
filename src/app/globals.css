@@ -7,15 +7,24 @@
   --color-glow: #f9efdd;
 
   --font-sans: var(--font-karla), ui-sans-serif, system-ui, sans-serif;
-  --font-ui: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-pixel: var(--font-silkscreen), ui-monospace, monospace;
 
   /* Figma: Shadow/xs, Shadow/2xl */
   --shadow-xs-token: 0 1px 2px 0 rgb(16 24 40 / 0.05);
   --shadow-2xl-token: 0 24px 48px -12px rgb(16 24 40 / 0.18);
 
-  /* Header/footer rail width from the 1280px frame */
-  --spacing-rail: 1280px;
+  /* The dot grid's pitch. Every vertical gap, the rail and the buttons are
+     multiples of it, so the background stops being texture and becomes the
+     reason things sit where they do. */
+  --spacing-dot: 24px;
+
+  /* 52 dots wide. An even multiple matters because the rail is centred: half
+     of it (624px) is itself a whole number of dots, so the content edge lands
+     on a dot column at every viewport width. */
+  --spacing-rail: 1248px;
+
+  /* Accent — the pink from the logo's bloom. */
+  --color-accent: #f72585;
 }
 
 body {

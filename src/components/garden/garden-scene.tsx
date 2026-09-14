@@ -83,7 +83,7 @@ export function GardenScene() {
       <div className="flex flex-col items-end pr-6">
         <div className="mr-8 flex flex-col items-center">
           {/* The garden's weather, flying above its own sign. */}
-          <WindIndicator className="mb-[3px] text-[#6f553a]" />
+          <WindIndicator className="mb-[3px] text-[#3b6fd4]" />
           <div className="relative z-10 rounded-[2px] border-[2px] border-[#6f553a] bg-[#c8a273] px-3 py-[3px] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]">
             <span className="font-pixel text-[11px] tracking-wide text-[#3a2a18]">
               Zen Garden
@@ -141,7 +141,7 @@ export function GardenScene() {
                 setResetToken((t) => t + 1);
                 setLastPlanted(null);
               }}
-              className="rounded-[3px] border border-[#6f553a] bg-[#c8a273] px-2 py-[3px] font-pixel text-[8px] text-[#3a2a18] transition-colors hover:bg-[#d9b88c]"
+              className="rounded-[2px] border border-[#6f553a] bg-[#efdcc0] px-2 py-[3px] font-pixel text-[9px] font-bold text-[#2f2112] transition-colors hover:bg-white"
             >
               clear garden
             </button>

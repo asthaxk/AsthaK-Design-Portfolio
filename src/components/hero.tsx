@@ -11,7 +11,7 @@ export function Hero() {
           223/118 wide/tall, offset -63/118 and -51/118 — so the geometry ratio
           survives at every size.
         */}
-        <div className="relative size-[clamp(76px,12vh,118px)] overflow-hidden rounded-full">
+        <div className="relative size-24 overflow-hidden rounded-full [@media(max-height:680px)]:size-[72px]">
           <Image
             src="/astha.jpg"
             alt="Astha Khurana"
@@ -22,15 +22,15 @@ export function Hero() {
           />
         </div>
 
-        <h1 className="mt-[clamp(16px,4vh,40px)] text-[clamp(20px,2.4vh,24px)] leading-[1] font-bold text-ink">
+        <h1 className="mt-6 text-[24px] leading-[24px] font-bold text-ink [@media(max-height:800px)]:mt-3">
           Hi! I&rsquo;m Astha :)
         </h1>
-        <p className="mt-[clamp(8px,1.4vh,14px)] max-w-[613px] text-[clamp(16px,2vh,20px)] leading-[1.4] text-ink">
+        <p className="mt-6 max-w-[600px] text-[18px] leading-[24px] text-ink [@media(max-height:800px)]:mt-3">
           Design leader, 0-1 specialist and chai-lover <PixelIcon name="coffee" size={17} />. Building AI tools used
           in thousands of Indian courtrooms at Adalat AI.
         </p>
 
-        <ul className="mt-[clamp(18px,4.9vh,48px)] max-w-[787px] space-y-[clamp(6px,1.4vh,14px)] text-[clamp(16px,2vh,20px)] leading-[1.4] text-ink">
+        <ul className="mt-12 max-w-[768px] space-y-6 text-[18px] leading-[24px] text-ink [@media(max-height:800px)]:mt-6 [@media(max-height:800px)]:space-y-3">
           <li>
             <PixelIcon name="laptop" size={17} /> Hiring for my team at{" "}
             <Link
@@ -56,14 +56,14 @@ export function Hero() {
           </li>
         </ul>
 
-        <p className="mt-[clamp(16px,4.5vh,44px)] max-w-[652px] text-[clamp(16px,2vh,20px)] leading-[1.4] text-ink">
+        <p className="mt-12 max-w-[648px] text-[18px] leading-[24px] text-ink [@media(max-height:800px)]:mt-6">
           Building for unexplored audiences? Or just want to chat about design?
         </p>
 
         <Link
           id="book-a-call"
           href="#book-a-call"
-          className="mt-[clamp(10px,2vh,20px)] inline-flex items-center justify-center rounded-[8px] border border-cream bg-cream px-[18px] py-[clamp(7px,1.1vh,10px)] font-ui text-[16px] leading-[24px] font-semibold text-ink shadow-(--shadow-2xl-token)"
+          className="mt-6 inline-flex items-center justify-center rounded-[3px] bg-accent px-6 py-3 font-pixel text-[12px] leading-[1] font-bold text-white shadow-[4px_4px_0_0_var(--color-ink)] transition-[transform,box-shadow] duration-100 hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0_0_var(--color-ink)] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none [@media(max-height:800px)]:mt-3"
         >
           Book a Call
         </Link>

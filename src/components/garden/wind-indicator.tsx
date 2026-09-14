@@ -62,7 +62,7 @@ export function WindIndicator({ className = "" }: { className?: string }) {
           ),
         )}
       </svg>
-      <span className="font-pixel text-[10px]">breezy</span>
+      <span className="font-pixel text-[10px] font-bold">breezy</span>
     </div>
   );
 }
