@@ -11,19 +11,19 @@ const NAV = [
 export function SiteHeader() {
   return (
     <header className="border-b border-ink/100">
-      <div className="mx-auto flex h-[96px] w-full max-w-rail flex-wrap items-center justify-between gap-y-4 px-4 sm:px-8">
+      <div className="mx-auto flex h-[clamp(64px,9.8vh,96px)] w-full max-w-rail flex-wrap items-center justify-between gap-y-4 px-4 sm:px-8">
         <Link href="/" className="flex items-center gap-[12px]">
-          <span className="flex items-center justify-center rounded-[8px] border border-ink bg-ink p-[8px] shadow-(--shadow-xs-token)">
-            {/* 20px icon box; the bloom leaf overflows to inset -22.73% per Figma */}
-            <span className="relative block size-[20px]">
-              <Image
-                src="/logo.svg"
-                alt=""
-                width={29}
-                height={29}
-                className="absolute left-[-4.55px] top-[-4.55px] h-[29.09px] w-[29.09px] max-w-none"
-              />
-            </span>
+          {/* Figma "logo dark" (5:213) — the mark stands alone; its bloom
+              overflows the box to inset -22.73%, as percentages so it scales. */}
+          <span className="relative block size-[clamp(32px,4.4vh,40px)] shrink-0">
+            <Image
+              src="/logo.svg"
+              alt=""
+              width={264}
+              height={264}
+              priority
+              className="absolute left-[-22.73%] top-[-22.73%] h-[145.46%] w-[145.46%] max-w-none"
+            />
           </span>
           <span className="text-[16px] leading-[20px] font-bold text-ink">
             Astha Khurana

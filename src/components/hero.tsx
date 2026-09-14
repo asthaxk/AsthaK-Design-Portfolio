@@ -3,36 +3,41 @@ import Link from "next/link";
 
 export function Hero() {
   return (
-    <section className="relative flex-1 overflow-hidden">
+    <section className="relative flex flex-1 items-center overflow-hidden">
       {/* Figma: #f9efdd rect, 100px blur — soft cream field that falls off at the edges */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 bg-glow blur-[100px]"
       />
 
-      <div className="relative mx-auto w-full max-w-rail px-4 pt-[98px] pb-[114px] sm:px-8">
-        {/* Outer box 118×118; inner leaf 244×223 offset -63/-51 (object-cover crop from Figma) */}
-        <div className="relative size-[118px] overflow-hidden rounded-full">
+      <div className="relative mx-auto w-full max-w-rail px-4 py-[clamp(24px,5vh,56px)] sm:px-8">
+        {/*
+          Outer box is 118px at the design height and shrinks with the viewport.
+          The leaf keeps Figma's crop as percentages of that box — 244/118 and
+          223/118 wide/tall, offset -63/118 and -51/118 — so the geometry ratio
+          survives at every size.
+        */}
+        <div className="relative size-[clamp(76px,12vh,118px)] overflow-hidden rounded-full">
           <Image
             src="/astha.jpg"
             alt="Astha Khurana"
             width={244}
             height={223}
             priority
-            className="absolute left-[-63px] top-[-51px] h-[223px] w-[244px] max-w-none object-cover"
+            className="absolute left-[-53.39%] top-[-43.22%] h-[188.98%] w-[206.78%] max-w-none object-cover"
           />
         </div>
 
-        <h1 className="mt-[40px] text-[24px] leading-[24px] font-bold text-ink">
+        <h1 className="mt-[clamp(16px,4vh,40px)] text-[clamp(20px,2.4vh,24px)] leading-[1] font-bold text-ink">
           Hi! I&rsquo;m Astha <span aria-hidden>👋</span>
         </h1>
-        <p className="mt-[14px] max-w-[613px] text-[20px] leading-[28px] text-ink">
+        <p className="mt-[clamp(8px,1.4vh,14px)] max-w-[613px] text-[clamp(16px,2vh,20px)] leading-[1.4] text-ink">
           A seasoned Product Designer, UX Specialist and chai-lover ☕️ Spending
           my days freelancing, discovering good food all over India and building
           a yoga practice
         </p>
 
-        <ul className="mt-[48px] max-w-[787px] space-y-[14px] text-[20px] leading-[28px] text-ink">
+        <ul className="mt-[clamp(18px,4.9vh,48px)] max-w-[787px] space-y-[clamp(6px,1.4vh,14px)] text-[clamp(16px,2vh,20px)] leading-[1.4] text-ink">
           <li>
             <span aria-hidden>👩🏼‍💻</span>{" "}
             <Link href="#no-code" className="underline decoration-solid">
@@ -54,14 +59,14 @@ export function Hero() {
           </li>
         </ul>
 
-        <p className="mt-[44px] max-w-[652px] text-[20px] leading-[28px] text-ink">
+        <p className="mt-[clamp(16px,4.5vh,44px)] max-w-[652px] text-[clamp(16px,2vh,20px)] leading-[1.4] text-ink">
           Open to new projects! Want to work together or just chat about design?
         </p>
 
         <Link
           id="book-a-call"
           href="#book-a-call"
-          className="mt-[20px] inline-flex items-center justify-center rounded-[8px] border border-cream bg-cream px-[18px] py-[10px] font-ui text-[16px] leading-[24px] font-semibold text-ink shadow-(--shadow-2xl-token)"
+          className="mt-[clamp(10px,2vh,20px)] inline-flex items-center justify-center rounded-[8px] border border-cream bg-cream px-[18px] py-[clamp(7px,1.1vh,10px)] font-ui text-[16px] leading-[24px] font-semibold text-ink shadow-(--shadow-2xl-token)"
         >
           Book a Call
         </Link>
