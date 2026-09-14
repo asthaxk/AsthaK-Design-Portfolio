@@ -28,14 +28,14 @@ export function Hero() {
           223/118 wide/tall, offset -63/118 and -51/118 — so the geometry ratio
           survives at every size.
         */}
-        <div className="relative size-[clamp(76px,12vh,118px)] overflow-hidden rounded-full">
+        <div className="relative size-[clamp(76px,12vh,118px)] translate-x-[6px] rotate-[-5deg] overflow-hidden rounded-full border-[5px] border-white shadow-[0_8px_20px_-6px_rgba(16,24,40,0.35)]">
           <Image
             src="/astha.jpg"
             alt="Astha Khurana"
             width={244}
             height={223}
             priority
-            className="absolute left-[-53.39%] top-[-43.22%] h-[188.98%] w-[206.78%] max-w-none object-cover"
+            className="absolute left-[-58%] top-[-43.22%] h-[188.98%] w-[206.78%] max-w-none object-cover"
           />
         </div>
 
