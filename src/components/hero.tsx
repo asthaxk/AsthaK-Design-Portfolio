@@ -25,13 +25,13 @@ export function Hero() {
           Hi! I&rsquo;m Astha :)
         </h1>
         <p className="mt-[clamp(8px,1.4vh,14px)] max-w-[613px] text-[clamp(16px,2vh,20px)] leading-[1.4] text-ink">
-          Design leader, 0-1 specialist and chai-lover. Building AI tools used
+          Design leader, 0-1 specialist and chai-lover ☕. Building AI tools used
           in thousands of Indian courtrooms at Adalat AI.
         </p>
 
         <ul className="mt-[clamp(18px,4.9vh,48px)] max-w-[787px] space-y-[clamp(6px,1.4vh,14px)] text-[clamp(16px,2vh,20px)] leading-[1.4] text-ink">
           <li>
-            <span aria-hidden>&rarr;</span> Hiring for my team at{" "}
+            <span aria-hidden>💻</span> Hiring for my team at{" "}
             <Link
               href="https://adalat.ai/careers"
               className="underline decoration-solid"
@@ -40,13 +40,13 @@ export function Hero() {
             </Link>
           </li>
           <li>
-            <span aria-hidden>&rarr;</span> Mentoring junior designers at{" "}
+            <span aria-hidden>🍀</span> Mentoring junior designers at{" "}
             <Link href="#adplist" className="underline decoration-solid">
               adplist
             </Link>
           </li>
           <li>
-            <span aria-hidden>&rarr;</span> Advocating for design in product
+            <span aria-hidden>🖊️</span> Advocating for design in product
             teams on{" "}
             <Link href="#linkedin" className="underline decoration-solid">
               Linkedin
