@@ -4,10 +4,16 @@ import { useEffect, useRef } from "react";
 import { Application, Container, Graphics } from "pixi.js";
 import { breezeAt } from "./breeze";
 import {
+  BUSHES,
   FLOWERS,
+  POT,
+  POT_H,
+  POT_LIFT,
+  POT_W,
   SPRITE_H,
   SPRITE_W,
   charColour,
+  sceneryColour,
   type FlowerId,
 } from "./sprites";
 
@@ -62,6 +68,9 @@ type Plant = {
   plantedAt: number;
   /** Per-flower phase offset, so a gust does not move them in lockstep. */
   jitter: number;
+  potted: boolean;
+  /** When set, this is scenery drawn from BUSHES rather than a flower. */
+  bush?: number;
 };
 
 /** Left/right edges of the chosen plane at depth t. */
@@ -98,38 +107,89 @@ function drawGround(g: Graphics, plane: PlaneId) {
   }
 }
 
+/** Blit one bitmap, revealing rows from the bottom and leaning with the wind. */
+function drawSprite(
+  g: Graphics,
+  rows: string[],
+  w: number,
+  h: number,
+  originX: number,
+  originY: number,
+  visibleRows: number,
+  lean: number,
+  resolve: (ch: string) => string | null,
+) {
+  for (let ry = h - 1; ry >= h - visibleRows; ry--) {
+    const line = rows[ry];
+    // The base is rooted; the further up, the more it leans.
+    const weight = (h - 1 - ry) / (h - 1);
+    const shift = Math.round(lean * weight) * UNIT;
+    for (let rx = 0; rx < w; rx++) {
+      const colour = resolve(line[rx]);
+      if (!colour) continue;
+      g.rect(originX + rx * UNIT + shift, originY + ry * UNIT, UNIT, UNIT).fill(
+        colour,
+      );
+    }
+  }
+}
+
 function drawPlants(g: Graphics, plants: Plant[], now: number) {
   g.clear();
   // Back to front, so nearer flowers overlap further ones.
   const ordered = [...plants].sort((p, q) => p.t - q.t);
 
   for (const p of ordered) {
+    const progress = Math.min(1, (now - p.plantedAt) / GROW_MS);
+    if (progress <= 0) continue; // still waiting its turn to grow in
+
+    if (p.bush !== undefined) {
+      const bush = BUSHES[p.bush];
+      drawSprite(
+        g,
+        bush.rows,
+        bush.w,
+        bush.h,
+        Math.round(p.x - (bush.w * UNIT) / 2),
+        Math.round(p.y - bush.h * UNIT),
+        Math.ceil(progress * bush.h),
+        // Bushes are dense and low, so they barely move.
+        breezeAt(now, p.x, p.jitter) * 0.4,
+        sceneryColour,
+      );
+      continue;
+    }
+
     const rows = FLOWERS.find((f) => f.id === p.flower)?.rows;
     if (!rows) continue;
 
-    // Grow upward from the soil.
-    const progress = Math.min(1, (now - p.plantedAt) / GROW_MS);
-    const visible = Math.ceil(progress * SPRITE_H);
+    // A potted flower sits up on the rim rather than in the soil.
+    const lift = p.potted ? POT_LIFT * UNIT : 0;
+    drawSprite(
+      g,
+      rows,
+      SPRITE_W,
+      SPRITE_H,
+      Math.round(p.x - (SPRITE_W * UNIT) / 2),
+      Math.round(p.y - SPRITE_H * UNIT) - lift,
+      Math.ceil(progress * SPRITE_H),
+      breezeAt(now, p.x, p.jitter),
+      (ch) => charColour(ch, p.colour),
+    );
 
-    const originX = Math.round(p.x - (SPRITE_W * UNIT) / 2);
-    const originY = Math.round(p.y - SPRITE_H * UNIT);
-    const lean = breezeAt(now, p.x, p.jitter);
-
-    for (let ry = SPRITE_H - 1; ry >= SPRITE_H - visible; ry--) {
-      const line = rows[ry];
-      // The base is rooted; the further up the stem, the more it leans.
-      const weight = (SPRITE_H - 1 - ry) / (SPRITE_H - 1);
-      const shift = Math.round(lean * weight) * UNIT;
-      for (let rx = 0; rx < SPRITE_W; rx++) {
-        const colour = charColour(line[rx], p.colour);
-        if (!colour) continue;
-        g.rect(
-          originX + rx * UNIT + shift,
-          originY + ry * UNIT,
-          UNIT,
-          UNIT,
-        ).fill(colour);
-      }
+    if (p.potted) {
+      // Drawn after the flower so the rim occludes the base of the stem.
+      drawSprite(
+        g,
+        POT,
+        POT_W,
+        POT_H,
+        Math.round(p.x - (POT_W * UNIT) / 2),
+        Math.round(p.y - POT_H * UNIT),
+        POT_H,
+        0,
+        sceneryColour,
+      );
     }
   }
 }
@@ -214,6 +274,21 @@ const CLUSTERS: {
   },
 ];
 
+/**
+ * Bushes sit along the edges the flower clusters leave bare, giving the plane
+ * a border so the turf does not run flat to its outline.
+ * [row, column, bush variant, x offset in pixels]
+ */
+const BUSHES_PLACED: [number, number, number, number][] = [
+  [1, 12, 0, 0],
+  [1, 17, 1, 6],
+  [3, 19, 0, 10],
+  [6, 19, 1, 12],
+  [8, 1, 0, -6],
+  [11, 3, 1, -14],
+  [11, 9, 0, 4],
+];
+
 /** Place a flower on the perspective grid at the given row and column. */
 function cellPlant(
   row: number,
@@ -223,6 +298,7 @@ function cellPlant(
   plantedAt: number,
   plane: PlaneId,
   dx = 0,
+  opts: { potted?: boolean; bush?: number } = {},
 ): Plant {
   const t = (row + 0.5) / ROWS;
   const e = edgesAt(t, plane);
@@ -234,6 +310,8 @@ function cellPlant(
     t,
     plantedAt,
     jitter: (((row * 7 + col * 13 + Math.round(dx)) % 10) + 10) % 10 / 10 * Math.PI * 2,
+    potted: opts.potted ?? false,
+    bush: opts.bush,
   };
 }
 
@@ -241,6 +319,14 @@ function cellPlant(
 function seedGarden(now: number, plane: PlaneId): Plant[] {
   const out: Plant[] = [];
   let i = 0;
+  for (const [row, col, variant, dx] of BUSHES_PLACED) {
+    out.push(
+      cellPlant(row, col, "daisy", "#ffffff", now + i * 45, plane, dx, {
+        bush: variant,
+      }),
+    );
+    i++;
+  }
   for (const cluster of CLUSTERS) {
     const [baseRow, baseCol] = cluster.at;
     cluster.members.forEach(([dRow, dx], n) => {
@@ -265,16 +351,21 @@ function seedGarden(now: number, plane: PlaneId): Plant[] {
 export function GardenCanvas({
   flower,
   colour,
+  potted = false,
   plane = "trapezoid",
+  onPlant,
 }: {
   flower: FlowerId;
   colour: string;
+  potted?: boolean;
   plane?: PlaneId;
+  /** Fired with the wall-clock time whenever the visitor plants something. */
+  onPlant?: (at: number) => void;
 }) {
   const hostRef = useRef<HTMLDivElement>(null);
   // Kept in refs so the Pixi loop reads the latest selection without re-init.
-  const selection = useRef({ flower, colour });
-  selection.current = { flower, colour };
+  const selection = useRef({ flower, colour, potted, onPlant });
+  selection.current = { flower, colour, potted, onPlant };
 
   useEffect(() => {
     const host = hostRef.current;
@@ -343,9 +434,11 @@ export function GardenCanvas({
           x: e.left + ((col + 0.5) / COLS) * (e.right - e.left),
           y: rowT * GH,
           t: rowT,
+          potted: selection.current.potted,
           plantedAt: performance.now(),
           jitter: ((col * 13 + row * 7) % 10) / 10 * Math.PI * 2,
         });
+        selection.current.onPlant?.(Date.now());
       };
 
       canvas.addEventListener("dblclick", plant);

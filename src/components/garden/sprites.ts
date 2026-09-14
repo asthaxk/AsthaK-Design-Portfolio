@@ -154,3 +154,59 @@ export const DISC_9 = [
   ".xxxxxxx.",
   "..xxxxx..",
 ];
+
+/**
+ * Scenery bitmaps — pots and bushes. Unlike flowers these carry their own
+ * fixed palette rather than taking the player's colour, so they resolve
+ * through sceneryColour rather than charColour.
+ *
+ *   r  pot rim      b  pot body     g  pot highlight
+ *   d  leaf dark    m  leaf mid     l  leaf highlight
+ */
+const SCENERY_PALETTE: Record<string, string> = {
+  r: "#a85c3a",
+  b: "#c1714a",
+  g: "#d78a63",
+  d: "#6b8f5a",
+  m: "#86a86b",
+  l: "#a3c285",
+};
+
+export function sceneryColour(ch: string): string | null {
+  return SCENERY_PALETTE[ch] ?? null;
+}
+
+export const POT = ["rrrrrrr", ".bbgbb.", ".bbbbb.", "..bbb.."];
+export const POT_W = 7;
+export const POT_H = 4;
+/** How far a potted flower rises so its stem leaves the rim, in sprite pixels. */
+export const POT_LIFT = 3;
+
+export const BUSHES: { w: number; h: number; rows: string[] }[] = [
+  {
+    w: 13,
+    h: 8,
+    rows: [
+      "....dddd.....",
+      "..ddmmmmdd...",
+      ".dmmmmlmmmd..",
+      "dmmmmmmlmmmmd",
+      "dmmmmmmmmmmmd",
+      ".dmmmmmmmmmd.",
+      "..ddmmmmmdd..",
+      "....dddd.....",
+    ],
+  },
+  {
+    w: 9,
+    h: 6,
+    rows: [
+      "...ddd...",
+      ".ddmmmdd.",
+      "dmmmlmmmd",
+      "dmmmmmmmd",
+      ".dmmmmmd.",
+      "...ddd...",
+    ],
+  },
+];

@@ -1,6 +1,6 @@
 "use client";
 
-import { COLOURS, FLOWERS, type FlowerId } from "./sprites";
+import { COLOURS, FLOWERS, POT, POT_H, POT_W, sceneryColour, type FlowerId } from "./sprites";
 import { FlowerIcon } from "./flower-icon";
 import { PixelDisc } from "./pixel-disc";
 
@@ -65,5 +65,54 @@ export function ColourPicker({
         );
       })}
     </div>
+  );
+}
+
+/** The pot bitmap, rendered crisp for the toggle. */
+function PotIcon({ size = 22 }: { size?: number }) {
+  return (
+    <svg
+      viewBox={`0 0 ${POT_W} ${POT_H}`}
+      width={size}
+      height={(size * POT_H) / POT_W}
+      shapeRendering="crispEdges"
+      aria-hidden
+    >
+      {POT.flatMap((row, y) =>
+        [...row].map((ch, x) => {
+          const fill = sceneryColour(ch);
+          return fill ? (
+            <rect key={`${x}-${y}`} x={x} y={y} width={1} height={1} fill={fill} />
+          ) : null;
+        }),
+      )}
+    </svg>
+  );
+}
+
+export function PotToggle({
+  value,
+  onChange,
+}: {
+  value: boolean;
+  onChange: (v: boolean) => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={() => onChange(!value)}
+      aria-pressed={value}
+      title={value ? "Planting in pots" : "Planting in soil"}
+      className={`flex h-[38px] items-center gap-2 rounded-[8px] border-[3px] px-2 transition-transform ${
+        value
+          ? "-translate-y-[2px] border-ink bg-white"
+          : "border-white bg-white/70 hover:-translate-y-[1px]"
+      }`}
+    >
+      <span className={value ? "" : "opacity-40 grayscale"}>
+        <PotIcon />
+      </span>
+      <span className="font-pixel text-[9px] text-ink">pot</span>
+    </button>
   );
 }
