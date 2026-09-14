@@ -10,7 +10,7 @@ export function Hero() {
           223/118 wide/tall, offset -63/118 and -51/118 — so the geometry ratio
           survives at every size.
         */}
-        <div className="relative size-[clamp(76px,12vh,118px)] translate-x-[10px] rotate-[-8deg] overflow-hidden rounded-full border-[clamp(7px,1.3vh,11px)] border-white shadow-sticker">
+        <div className="relative size-[clamp(76px,12vh,118px)] overflow-hidden rounded-full">
           <Image
             src="/astha.jpg"
             alt="Astha Khurana"
@@ -59,7 +59,7 @@ export function Hero() {
         <Link
           id="book-a-call"
           href="#book-a-call"
-          className="mt-[clamp(10px,2vh,20px)] inline-flex -rotate-[2.5deg] items-center justify-center rounded-[10px] border-[3px] border-white bg-cream px-[18px] py-[clamp(7px,1.1vh,10px)] font-ui text-[16px] leading-[24px] font-semibold text-ink shadow-sticker transition-transform duration-200 hover:-translate-y-[1px] hover:rotate-0"
+          className="mt-[clamp(10px,2vh,20px)] inline-flex items-center justify-center rounded-[8px] border border-cream bg-cream px-[18px] py-[clamp(7px,1.1vh,10px)] font-ui text-[16px] leading-[24px] font-semibold text-ink shadow-(--shadow-2xl-token)"
         >
           Book a Call
         </Link>

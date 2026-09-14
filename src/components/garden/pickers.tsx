@@ -53,10 +53,10 @@ function Swatch({
       onClick={onClick}
       aria-pressed={active}
       title={title}
-      className={`flex h-[34px] min-w-[34px] items-center justify-center gap-1 rounded-[7px] border-[3px] px-1 transition-transform ${
+      className={`flex h-[34px] min-w-[34px] items-center justify-center gap-1 rounded-[7px] border px-1 transition-colors ${
         active
-          ? "-translate-y-[2px] border-ink bg-white"
-          : "border-white bg-white/70 hover:-translate-y-[1px]"
+          ? "border-ink bg-white"
+          : "border-ink/15 bg-white/60 hover:border-ink/40"
       }`}
     >
       {children}
@@ -174,7 +174,7 @@ export function ColourPicker({
   onChange: (c: string) => void;
 }) {
   return (
-    <>
+    <div className="grid grid-cols-9 gap-[4px]">
       {COLOURS.map((c) => {
         const active = c === value;
         return (
@@ -192,6 +192,6 @@ export function ColourPicker({
           </button>
         );
       })}
-    </>
+    </div>
   );
 }

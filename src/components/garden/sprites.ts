@@ -168,32 +168,36 @@ export type Bitmap = {
   palette: Record<string, string>;
 };
 
-const TERRACOTTA = { r: "#a85c3a", b: "#c1714a", g: "#d78a63" };
-const STONE = { r: "#8d9199", b: "#a8adb5", g: "#c3c8cf" };
-const GLAZED = { r: "#35608f", b: "#4a7fb5", g: "#6fa3d2" };
+/** Every pot is the same terracotta; they differ by silhouette alone. */
+const TERRACOTTA = {
+  r: "#9a5233", // rim and outline
+  b: "#b96a44", // body
+  g: "#d18a63", // highlight
+  k: "#7f4227", // shadowed base
+};
 const LEAVES = { d: "#6b8f5a", m: "#86a86b", l: "#a3c285" };
 
 export const POTS: Bitmap[] = [
   {
-    name: "Terracotta",
+    name: "Classic",
     w: 7,
-    h: 4,
-    rows: ["rrrrrrr", ".bbgbb.", ".bbbbb.", "..bbb.."],
+    h: 5,
+    rows: ["rrrrrrr", ".bgbbb.", ".bbbbb.", "..bbb..", "..kkk.."],
     palette: TERRACOTTA,
   },
   {
-    name: "Stone",
-    w: 7,
-    h: 5,
-    rows: ["rrrrrrr", ".bbgbb.", ".bbbbb.", ".bbbbb.", "..bbb.."],
-    palette: STONE,
+    name: "Tall",
+    w: 5,
+    h: 7,
+    rows: ["rrrrr", "bgbbb", "bbbbb", "bbbbb", ".bbb.", ".bbb.", ".kkk."],
+    palette: TERRACOTTA,
   },
   {
-    name: "Glazed",
+    name: "Bowl",
     w: 9,
     h: 4,
-    rows: ["rrrrrrrrr", ".bbbgbbb.", "..bbbbb..", "...bbb..."],
-    palette: GLAZED,
+    rows: ["rrrrrrrrr", ".bgbbbbb.", "..bbbbb..", "...kkk..."],
+    palette: TERRACOTTA,
   },
 ];
 

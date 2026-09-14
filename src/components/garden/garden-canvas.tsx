@@ -368,13 +368,18 @@ export function GardenCanvas({
   brush,
   plane = "trapezoid",
   onPlant,
+  resetToken = 0,
 }: {
   brush: Brush;
   plane?: PlaneId;
   /** Fired with the wall-clock time whenever the visitor places something. */
   onPlant?: (at: number) => void;
+  /** Bumping this empties the garden, seeded plantings included. */
+  resetToken?: number;
 }) {
   const hostRef = useRef<HTMLDivElement>(null);
+  // Held in a ref so clearing does not tear down and rebuild the Pixi app.
+  const plantsRef = useRef<Plant[]>([]);
   // Kept in refs so the Pixi loop reads the latest selection without re-init.
   const selection = useRef({ brush, onPlant });
   selection.current = { brush, onPlant };
@@ -385,7 +390,8 @@ export function GardenCanvas({
 
     let app: Application | null = null;
     let disposed = false;
-    const plants: Plant[] = [];
+    const plants = plantsRef.current;
+    plants.length = 0;
 
     (async () => {
       const instance = new Application();
@@ -483,6 +489,13 @@ export function GardenCanvas({
       }
     };
   }, [plane]);
+
+  // Empty the garden in place. The ticker keeps running and simply finds
+  // nothing to draw, so there is no flicker of a rebuilt canvas.
+  useEffect(() => {
+    if (resetToken === 0) return;
+    plantsRef.current.length = 0;
+  }, [resetToken]);
 
   return <div ref={hostRef} className="w-full" />;
 }

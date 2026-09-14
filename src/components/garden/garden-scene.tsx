@@ -34,11 +34,12 @@ function LastPlanted({ at }: { at: number | null }) {
     return () => clearInterval(id);
   }, [at]);
 
+  // The instruction stays put; the timestamp joins it rather than replacing
+  // it, so the garden never stops telling you how to use it.
   return (
     <p className="font-pixel text-[9px] text-ink/60">
-      {at === null
-        ? "double click the garden to plant"
-        : `last planted ${sinceLabel(at, now)}`}
+      double click to plant
+      {at === null ? "" : ` · last ${sinceLabel(at, now)}`}
     </p>
   );
 }
@@ -57,6 +58,7 @@ export function GardenScene() {
   const [bush, setBush] = useState(0);
   const [kind, setKind] = useState<"flower" | "bush">("flower");
   const [lastPlanted, setLastPlanted] = useState<number | null>(null);
+  const [resetToken, setResetToken] = useState(0);
 
   const brush: Brush =
     kind === "bush" ? { kind: "bush", bush } : { kind: "flower", flower, colour, pot };
@@ -102,10 +104,27 @@ export function GardenScene() {
           />
         </BuilderRow>
 
-        <LastPlanted at={lastPlanted} />
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => {
+              setResetToken((t) => t + 1);
+              setLastPlanted(null);
+            }}
+            className="rounded-[6px] border border-ink/15 bg-white/60 px-2 py-[3px] font-pixel text-[8px] text-ink/70 transition-colors hover:border-ink/40 hover:text-ink"
+          >
+            clear garden
+          </button>
+          <LastPlanted at={lastPlanted} />
+        </div>
       </div>
 
-      <GardenCanvas brush={brush} plane="wedge" onPlant={setLastPlanted} />
+      <GardenCanvas
+        brush={brush}
+        plane="wedge"
+        onPlant={setLastPlanted}
+        resetToken={resetToken}
+      />
     </div>
   );
 }
