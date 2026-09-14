@@ -10,6 +10,17 @@ export function Hero() {
         className="pointer-events-none absolute inset-0 bg-glow blur-[100px]"
       />
 
+      {/* Dot grid over the cream field, under the content */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0"
+        style={{
+          backgroundImage:
+            "radial-gradient(rgba(0,0,0,0.3) 1px, transparent 1px)",
+          backgroundSize: "24px 24px",
+        }}
+      />
+
       <div className="relative mx-auto w-full max-w-rail px-4 py-[clamp(24px,5vh,56px)] sm:px-8">
         {/*
           Outer box is 118px at the design height and shrinks with the viewport.
