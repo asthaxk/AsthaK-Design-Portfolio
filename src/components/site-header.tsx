@@ -13,7 +13,7 @@ export function SiteHeader() {
     <header className="border-b border-ink/100">
       <div className="mx-auto flex h-[clamp(64px,9.8vh,96px)] w-full max-w-rail flex-wrap items-center justify-between gap-y-4 px-4 sm:px-8">
         <Link href="/" className="flex items-center gap-[12px]">
-          {/* Figma "logo dark" (5:213) — the mark stands alone; its bloom
+          {/* Figma "logo white" (5:222) — the mark stands alone; its bloom
               overflows the box to inset -22.73%, as percentages so it scales. */}
           <span className="relative block size-[clamp(32px,4.4vh,40px)] shrink-0">
             <Image
