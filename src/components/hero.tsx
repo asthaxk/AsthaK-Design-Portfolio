@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { PixelEmoji } from "./pixel-emoji";
+import { PixelIcon } from "./pixel-icon";
 
 export function Hero() {
   return (
@@ -26,13 +26,13 @@ export function Hero() {
           Hi! I&rsquo;m Astha :)
         </h1>
         <p className="mt-[clamp(8px,1.4vh,14px)] max-w-[613px] text-[clamp(16px,2vh,20px)] leading-[1.4] text-ink">
-          Design leader, 0-1 specialist and chai-lover <PixelEmoji name="chai" size={19} />. Building AI tools used
+          Design leader, 0-1 specialist and chai-lover <PixelIcon name="coffee" size={17} />. Building AI tools used
           in thousands of Indian courtrooms at Adalat AI.
         </p>
 
         <ul className="mt-[clamp(18px,4.9vh,48px)] max-w-[787px] space-y-[clamp(6px,1.4vh,14px)] text-[clamp(16px,2vh,20px)] leading-[1.4] text-ink">
           <li>
-            <PixelEmoji name="laptop" size={16} /> Hiring for my team at{" "}
+            <PixelIcon name="laptop" size={17} /> Hiring for my team at{" "}
             <Link
               href="https://adalat.ai/careers"
               className="underline decoration-solid"
@@ -41,13 +41,13 @@ export function Hero() {
             </Link>
           </li>
           <li>
-            <PixelEmoji name="clover" size={17} /> Mentoring junior designers at{" "}
+            <PixelIcon name="leaf" size={17} /> Mentoring junior designers at{" "}
             <Link href="#adplist" className="underline decoration-solid">
               adplist
             </Link>
           </li>
           <li>
-            <PixelEmoji name="pen" size={17} /> Advocating for design in product
+            <PixelIcon name="pencil" size={17} /> Advocating for design in product
             teams on{" "}
             <Link href="#linkedin" className="underline decoration-solid">
               Linkedin

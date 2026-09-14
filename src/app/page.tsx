@@ -1,6 +1,5 @@
 import { Hero } from "@/components/hero";
 import { GardenScene } from "@/components/garden/garden-scene";
-import { WindIndicator } from "@/components/garden/wind-indicator";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 
@@ -39,8 +38,6 @@ export default function Home() {
         <div className="pointer-events-none relative z-10 mx-auto w-full max-w-rail px-4 py-[clamp(24px,5vh,56px)] sm:px-8">
           <Hero />
         </div>
-
-        <WindIndicator className="absolute bottom-3 left-4 z-10 text-ink sm:left-8" />
       </section>
 
       <SiteFooter />

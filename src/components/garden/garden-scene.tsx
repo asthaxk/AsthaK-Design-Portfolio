@@ -11,6 +11,7 @@ import {
   FlowerPicker,
   PotPicker,
 } from "./pickers";
+import { WindIndicator } from "./wind-indicator";
 
 const GardenCanvas = dynamic(
   () => import("./garden-canvas").then((m) => m.GardenCanvas),
@@ -41,7 +42,7 @@ function LastPlanted({ at }: { at: number | null }) {
   // up, and without a reserved width the slab would resize with it and drag
   // the post along the ground.
   return (
-    <p className="font-pixel text-[9px] whitespace-nowrap text-[#5a4429]">
+    <p className="font-pixel text-[9px] whitespace-nowrap text-[#fdf3e3]">
       double click to plant
       <span className="ml-1 inline-block w-[92px]">
         {at === null ? "" : `· last ${sinceLabel(at, now)}`}
@@ -81,6 +82,8 @@ export function GardenScene() {
       */}
       <div className="flex flex-col items-end pr-6">
         <div className="mr-8 flex flex-col items-center">
+          {/* The garden's weather, flying above its own sign. */}
+          <WindIndicator className="mb-[3px] text-[#6f553a]" />
           <div className="relative z-10 rounded-[2px] border-[2px] border-[#6f553a] bg-[#c8a273] px-3 py-[3px] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]">
             <span className="font-pixel text-[11px] tracking-wide text-[#3a2a18]">
               Zen Garden
@@ -93,11 +96,11 @@ export function GardenScene() {
         </div>
 
         <div
-          className="relative flex flex-col items-end gap-[6px] rounded-[3px] border-[3px] border-[#6f553a] bg-[#d9bb92] px-3 py-[10px] shadow-[inset_0_1px_0_rgba(255,255,255,0.22),0_2px_0_#6f553a]"
+          className="relative flex flex-col items-end gap-[6px] rounded-[3px] border-[3px] border-[#6f553a] bg-[#b08a5e] px-3 py-[10px] shadow-[inset_0_1px_0_rgba(255,255,255,0.22),0_2px_0_#6f553a]"
           style={{
             // Plank seams, hard-edged so they stay in keeping with the pixels.
             backgroundImage:
-              "repeating-linear-gradient(0deg, transparent 0 15px, rgba(111,85,58,0.30) 15px 16px)",
+              "repeating-linear-gradient(0deg, transparent 0 15px, rgba(111,85,58,0.38) 15px 16px)",
           }}
         >
           <BuilderRow label="flowers">
