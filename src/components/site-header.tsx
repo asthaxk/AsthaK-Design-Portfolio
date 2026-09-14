@@ -44,7 +44,7 @@ export function SiteHeader() {
           </nav>
           <Link
             href="#book-a-call"
-            className="rounded-[8px] border border-cream bg-cream px-[14px] py-[8px] text-[16px] leading-[20px] font-bold whitespace-nowrap text-ink shadow-(--shadow-xs-token)"
+            className="-rotate-[2deg] rounded-[10px] border-[3px] border-white bg-cream px-[14px] py-[8px] text-[16px] leading-[20px] font-bold whitespace-nowrap text-ink shadow-sticker transition-transform duration-200 hover:-translate-y-[1px] hover:rotate-0"
           >
             Book a Call
           </Link>

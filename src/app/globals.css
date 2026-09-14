@@ -13,6 +13,10 @@
   --shadow-xs-token: 0 1px 2px 0 rgb(16 24 40 / 0.05);
   --shadow-2xl-token: 0 24px 48px -12px rgb(16 24 40 / 0.18);
 
+  /* Stacked contact + falloff shadows that make an element read as a sticker */
+  --shadow-sticker: 0 1px 2px rgb(16 24 40 / 0.22), 0 3px 6px -1px rgb(16 24 40 / 0.2),
+    0 14px 26px -10px rgb(16 24 40 / 0.32);
+
   /* Header/footer rail width from the 1280px frame */
   --spacing-rail: 1280px;
 }
