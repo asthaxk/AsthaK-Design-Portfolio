@@ -39,21 +39,21 @@ export function Hero() {
             <PixelEmoji name="laptop" size={17} /> Hiring for my team at{" "}
             <Link
               href="https://adalat.ai/careers"
-              className="no-underline hover:underline hover:decoration-wavy hover:decoration-1 hover:underline-offset-[5px]"
+              className="no-underline hover:underline hover:decoration-wavy hover:decoration-[2.5px] hover:underline-offset-[2px] hover:decoration-[#101828]"
             >
               Adalat AI
             </Link>
           </li>
           <li>
             <PixelEmoji name="clover" size={18} /> Mentoring junior designers at{" "}
-            <Link href="#adplist" className="no-underline hover:underline hover:decoration-wavy hover:decoration-1 hover:underline-offset-[5px]">
+            <Link href="#adplist" className="no-underline hover:underline hover:decoration-wavy hover:decoration-[2.5px] hover:underline-offset-[2px] hover:decoration-[#101828]">
               adplist
             </Link>
           </li>
           <li>
             <PixelEmoji name="pen" size={18} /> Advocating for design in product
             teams on{" "}
-            <Link href="#linkedin" className="no-underline hover:underline hover:decoration-wavy hover:decoration-1 hover:underline-offset-[5px]">
+            <Link href="#linkedin" className="no-underline hover:underline hover:decoration-wavy hover:decoration-[2.5px] hover:underline-offset-[2px] hover:decoration-[#101828]">
               Linkedin
             </Link>{" "}
             and Substack (coming soon)

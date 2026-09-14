@@ -36,7 +36,7 @@ export function SiteHeader() {
               <Link
                 key={item.label}
                 href={item.href}
-                className="text-[16px] leading-[20px] whitespace-nowrap text-ink no-underline hover:underline hover:decoration-wavy hover:decoration-1 hover:underline-offset-[5px]"
+                className="text-[16px] leading-[20px] whitespace-nowrap text-ink no-underline hover:underline hover:decoration-wavy hover:decoration-[2.5px] hover:underline-offset-[2px] hover:decoration-[#101828]"
               >
                 {item.label}
               </Link>
