@@ -77,7 +77,7 @@ export function BuilderRow({
 }) {
   return (
     <div className="flex items-center justify-end gap-2">
-      <span className="font-pixel text-[8px] text-ink/50">{label}</span>
+      <span className="font-pixel text-[8px] text-[#f0e0c6]/75">{label}</span>
       <div className="flex items-center gap-[5px]">{children}</div>
     </div>
   );

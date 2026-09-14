@@ -37,7 +37,7 @@ function LastPlanted({ at }: { at: number | null }) {
   // The instruction stays put; the timestamp joins it rather than replacing
   // it, so the garden never stops telling you how to use it.
   return (
-    <p className="font-pixel text-[9px] text-ink/60">
+    <p className="font-pixel text-[9px] text-[#f0e0c6]/70">
       double click to plant
       {at === null ? "" : ` · last ${sinceLabel(at, now)}`}
     </p>
@@ -68,54 +68,76 @@ export function GardenScene() {
       id="garden"
       className="absolute right-0 bottom-0 z-10 w-[min(58%,660px)] max-md:hidden"
     >
-      <div className="flex flex-col items-end gap-[6px] px-4 pb-2">
-        <p className="font-pixel text-[11px] tracking-wide text-ink">
-          Zen Garden
-        </p>
+      {/*
+        A signpost naming the garden, standing on the control slab. Both are
+        cut from the same wood as the fence, so the chrome reads as part of the
+        garden rather than as page furniture sitting on top of it.
+      */}
+      <div className="flex flex-col items-end pr-6 pb-2">
+        <div className="mr-8 flex flex-col items-center">
+          <div className="relative z-10 rounded-[2px] border-[2px] border-[#6f553a] bg-[#c8a273] px-3 py-[3px] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]">
+            <span className="font-pixel text-[11px] tracking-wide text-[#3a2a18]">
+              Zen Garden
+            </span>
+          </div>
+          <div className="flex gap-7">
+            <span className="h-[9px] w-[3px] bg-[#8a6b4a]" />
+            <span className="h-[9px] w-[3px] bg-[#8a6b4a]" />
+          </div>
+        </div>
 
-        <BuilderRow label="flowers">
-          <FlowerPicker
-            value={flower}
-            colour={colour}
-            active={kind === "flower"}
-            onChange={(id) => {
-              setFlower(id);
-              setKind("flower");
-            }}
-          />
-        </BuilderRow>
+        <div
+          className="flex flex-col items-end gap-[6px] rounded-[3px] border-[3px] border-[#6f553a] bg-[#b08a5e] px-3 py-[10px] shadow-[inset_0_1px_0_rgba(255,255,255,0.22),0_2px_0_#6f553a]"
+          style={{
+            // Plank seams, hard-edged so they stay in keeping with the pixels.
+            backgroundImage:
+              "repeating-linear-gradient(0deg, transparent 0 15px, rgba(111,85,58,0.38) 15px 16px)",
+          }}
+        >
+          <BuilderRow label="flowers">
+            <FlowerPicker
+              value={flower}
+              colour={colour}
+              active={kind === "flower"}
+              onChange={(id) => {
+                setFlower(id);
+                setKind("flower");
+              }}
+            />
+          </BuilderRow>
 
-        <BuilderRow label="colour">
-          <ColourPicker value={colour} onChange={setColour} />
-        </BuilderRow>
+          <BuilderRow label="colour">
+            <ColourPicker value={colour} onChange={setColour} />
+          </BuilderRow>
 
-        <BuilderRow label="pots">
-          <PotPicker value={pot} onChange={setPot} />
-        </BuilderRow>
+          <BuilderRow label="pots">
+            <PotPicker value={pot} onChange={setPot} />
+          </BuilderRow>
 
-        <BuilderRow label="bushes">
-          <BushPicker
-            value={bush}
-            active={kind === "bush"}
-            onChange={(v) => {
-              setBush(v);
-              setKind("bush");
-            }}
-          />
-        </BuilderRow>
+          <BuilderRow label="bushes">
+            <BushPicker
+              value={bush}
+              active={kind === "bush"}
+              onChange={(v) => {
+                setBush(v);
+                setKind("bush");
+              }}
+            />
+          </BuilderRow>
 
-        <div className="flex items-center gap-3">
-          <button
-            type="button"
-            onClick={() => {
-              setResetToken((t) => t + 1);
-              setLastPlanted(null);
-            }}
-            className="rounded-[6px] border border-ink/15 bg-white/60 px-2 py-[3px] font-pixel text-[8px] text-ink/70 transition-colors hover:border-ink/40 hover:text-ink"
-          >
-            clear garden
-          </button>
-          <LastPlanted at={lastPlanted} />
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => {
+                setResetToken((t) => t + 1);
+                setLastPlanted(null);
+              }}
+              className="rounded-[3px] border border-[#6f553a] bg-[#c8a273] px-2 py-[3px] font-pixel text-[8px] text-[#3a2a18] transition-colors hover:bg-[#d9b88c]"
+            >
+              clear garden
+            </button>
+            <LastPlanted at={lastPlanted} />
+          </div>
         </div>
       </div>
 
