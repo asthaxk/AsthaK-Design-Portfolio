@@ -8,7 +8,7 @@ export default function Home() {
     <>
       <SiteHeader />
 
-      <section className="relative flex flex-1 items-center overflow-hidden">
+      <section className="relative flex flex-1 flex-col lg:flex-row lg:items-center lg:overflow-hidden">
         {/* Figma: #f9efdd rect, 100px blur — soft cream field that falls off at the edges */}
         <div
           aria-hidden
@@ -29,18 +29,19 @@ export default function Home() {
           }}
         />
 
-        {/*
-          The garden bleeds into the bottom right of the fold and its controls
-          tuck into the empty triangle the wedge leaves above; the hero copy
-          sits in the space the diagonal opens up on the left.
-        */}
-        <GardenScene />
 
         {/* The rail is full width but mostly empty, so it must not swallow
             clicks meant for the garden behind it; the hero column re-enables them. */}
         <div className="pointer-events-none relative z-10 mx-auto w-full max-w-rail px-4 py-6 sm:px-6 [@media(max-height:800px)]:py-3">
           <Hero />
         </div>
+
+        {/*
+          The garden bleeds into the bottom right of the fold on large screens;
+          below that there is no room beside the hero, so it stacks under it
+          rather than overlapping the copy.
+        */}
+        <GardenScene />
       </section>
 
       <SiteFooter />

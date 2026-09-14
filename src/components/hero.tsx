@@ -67,7 +67,7 @@ export function Hero() {
         <Link
           id="book-a-call"
           href="#book-a-call"
-          className="mt-6 inline-flex items-center justify-center rounded-[3px] border-2 border-accent bg-white px-6 py-3 font-pixel text-[12px] leading-[1] font-bold text-accent shadow-[4px_4px_0_0_var(--color-accent-shadow)] transition-[transform,box-shadow] duration-100 hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0_0_var(--color-accent-shadow)] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none [@media(max-height:800px)]:mt-3"
+          className="mt-6 inline-flex items-center justify-center rounded-[3px] border-2 border-accent bg-white px-6 py-3 text-[15px] leading-[18px] font-bold tracking-[0.01em] text-accent shadow-[4px_4px_0_0_var(--color-accent-shadow)] transition-[transform,box-shadow] duration-100 hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0_0_var(--color-accent-shadow)] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none [@media(max-height:800px)]:mt-3"
         >
           Book a Call
         </Link>

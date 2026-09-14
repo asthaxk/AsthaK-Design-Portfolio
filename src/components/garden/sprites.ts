@@ -6,7 +6,15 @@
  *   C  bright centre    c  dark centre
  *   s  stem             L  leaf
  */
-export type FlowerId = "daisy" | "tulip" | "poppy" | "bell" | "sprout";
+export type FlowerId =
+  | "daisy"
+  | "tulip"
+  | "poppy"
+  | "bell"
+  | "sprout"
+  | "sunflower"
+  | "lavender"
+  | "blossom";
 
 export const STEM = "#7a9068";
 export const LEAF = "#93aa79";
@@ -76,6 +84,54 @@ export const FLOWERS: { id: FlowerId; name: string; rows: string[] }[] = [
       "...s...",
       ".lLs...",
       "...sLl.",
+      "...s...",
+    ],
+  },
+  {
+    id: "sunflower",
+    name: "Sunflower",
+    rows: [
+      "..p.p..",
+      ".ppppp.",
+      "ppcccpp",
+      "ppcccpp",
+      ".ppppp.",
+      "..p.p..",
+      "...s...",
+      ".lLs...",
+      "...sLl.",
+      "...s...",
+    ],
+  },
+  {
+    id: "lavender",
+    name: "Lavender",
+    rows: [
+      "...p...",
+      "..php..",
+      "...p...",
+      "..ppp..",
+      "...p...",
+      "...s...",
+      ".lLs...",
+      "...sLl.",
+      "...s...",
+      "...s...",
+    ],
+  },
+  {
+    id: "blossom",
+    name: "Blossom",
+    rows: [
+      "..p.p..",
+      ".ppppp.",
+      "..pCp..",
+      ".ppppp.",
+      "..p.p..",
+      "...s...",
+      ".lLs...",
+      "...sLl.",
+      "...s...",
       "...s...",
     ],
   },
@@ -202,6 +258,13 @@ export const POTS: Bitmap[] = [
     rows: ["rrrrrrrrr", ".bgbbbbb.", "..bbbbb..", "...kkk..."],
     palette: TERRACOTTA,
   },
+  {
+    name: "Square",
+    w: 7,
+    h: 5,
+    rows: ["rrrrrrr", "bbbgbbb", "bbbbbbb", "bbbbbbb", ".kkkkk."],
+    palette: TERRACOTTA,
+  },
 ];
 
 export const BUSHES: Bitmap[] = [
@@ -241,6 +304,13 @@ export const BUSHES: Bitmap[] = [
       "..ddd..",
     ],
     palette: { ...LEAVES, B: "#c94f6d" },
+  },
+  {
+    name: "Spire",
+    w: 5,
+    h: 8,
+    rows: ["..d..", ".dmd.", "dmmmd", "dmlmd", "dmmmd", ".dmd.", "..d..", "..d.."],
+    palette: LEAVES,
   },
 ];
 

@@ -43,7 +43,12 @@ function LastPlanted({ at }: { at: number | null }) {
   // the post along the ground.
   return (
     <p className="font-pixel text-[9px] whitespace-nowrap text-[#fdf3e3]">
-      double click to plant
+      <span className="[@media(pointer:coarse)]:hidden">
+        double click to plant
+      </span>
+      <span className="hidden [@media(pointer:coarse)]:inline">
+        double tap to plant
+      </span>
       <span className="ml-1 inline-block w-[92px]">
         {at === null ? "" : `· last ${sinceLabel(at, now)}`}
       </span>
@@ -73,7 +78,7 @@ export function GardenScene() {
   return (
     <div
       id="garden"
-      className="absolute right-0 bottom-0 z-10 w-[min(58%,660px)] max-md:hidden"
+      className="relative z-10 mx-auto w-full max-w-rail px-4 pb-8 sm:px-6 lg:absolute lg:right-0 lg:bottom-0 lg:mx-0 lg:w-[min(58%,660px)] lg:max-w-none lg:px-0 lg:pb-0"
     >
       {/*
         A signpost naming the garden, standing on the control slab. Both are

@@ -21,7 +21,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${karla.variable} ${silkscreen.variable} h-full antialiased`}
     >
-      <body className="flex min-h-full flex-col font-sans md:h-dvh md:overflow-hidden">{children}</body>
+      <body className="flex min-h-full flex-col font-sans lg:h-dvh lg:overflow-hidden">{children}</body>
     </html>
   );
 }

@@ -497,7 +497,7 @@ export function GardenCanvas({
       drawGround(ground, plane);
       drawFence(ground, plane);
 
-      const plant = (event: MouseEvent) => {
+      const plant = (event: { clientX: number; clientY: number }) => {
         const rect = canvas.getBoundingClientRect();
         const x = ((event.clientX - rect.left) / rect.width) * GW;
         const y = ((event.clientY - rect.top) / rect.height) * GH;
@@ -540,6 +540,27 @@ export function GardenCanvas({
 
       canvas.addEventListener("dblclick", plant);
 
+      // Touch devices never fire dblclick, so recognise a double tap: a second
+      // touch soon after the first and close to it.
+      let lastTap = 0;
+      let lastX = 0;
+      let lastY = 0;
+      const onTouch = (event: PointerEvent) => {
+        if (event.pointerType === "mouse") return;
+        const now = performance.now();
+        const near =
+          Math.hypot(event.clientX - lastX, event.clientY - lastY) < 24;
+        if (now - lastTap < 350 && near) {
+          plant(event);
+          lastTap = 0;
+          return;
+        }
+        lastTap = now;
+        lastX = event.clientX;
+        lastY = event.clientY;
+      };
+      canvas.addEventListener("pointerdown", onTouch);
+
       instance.ticker.add(() => {
         drawPlants(flowersLayer, plants, performance.now());
       });
@@ -547,6 +568,7 @@ export function GardenCanvas({
       // Cleanup for the listener rides along with destroy() below.
       (instance as Application & { _detach?: () => void })._detach = () =>
         canvas.removeEventListener("dblclick", plant);
+        canvas.removeEventListener("pointerdown", onTouch);
     })();
 
     return () => {
