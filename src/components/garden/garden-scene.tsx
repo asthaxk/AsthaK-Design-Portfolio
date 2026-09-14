@@ -36,10 +36,16 @@ function LastPlanted({ at }: { at: number | null }) {
 
   // The instruction stays put; the timestamp joins it rather than replacing
   // it, so the garden never stops telling you how to use it.
+  //
+  // The timestamp sits in a fixed-width slot: it changes as the seconds tick
+  // up, and without a reserved width the slab would resize with it and drag
+  // the post along the ground.
   return (
-    <p className="font-pixel text-[9px] text-[#f0e0c6]/70">
+    <p className="font-pixel text-[9px] whitespace-nowrap text-[#5a4429]">
       double click to plant
-      {at === null ? "" : ` · last ${sinceLabel(at, now)}`}
+      <span className="ml-1 inline-block w-[92px]">
+        {at === null ? "" : `· last ${sinceLabel(at, now)}`}
+      </span>
     </p>
   );
 }
@@ -73,7 +79,7 @@ export function GardenScene() {
         cut from the same wood as the fence, so the chrome reads as part of the
         garden rather than as page furniture sitting on top of it.
       */}
-      <div className="flex flex-col items-end pr-6 pb-2">
+      <div className="flex flex-col items-end pr-6">
         <div className="mr-8 flex flex-col items-center">
           <div className="relative z-10 rounded-[2px] border-[2px] border-[#6f553a] bg-[#c8a273] px-3 py-[3px] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]">
             <span className="font-pixel text-[11px] tracking-wide text-[#3a2a18]">
@@ -87,11 +93,11 @@ export function GardenScene() {
         </div>
 
         <div
-          className="flex flex-col items-end gap-[6px] rounded-[3px] border-[3px] border-[#6f553a] bg-[#b08a5e] px-3 py-[10px] shadow-[inset_0_1px_0_rgba(255,255,255,0.22),0_2px_0_#6f553a]"
+          className="relative flex flex-col items-end gap-[6px] rounded-[3px] border-[3px] border-[#6f553a] bg-[#d9bb92] px-3 py-[10px] shadow-[inset_0_1px_0_rgba(255,255,255,0.22),0_2px_0_#6f553a]"
           style={{
             // Plank seams, hard-edged so they stay in keeping with the pixels.
             backgroundImage:
-              "repeating-linear-gradient(0deg, transparent 0 15px, rgba(111,85,58,0.38) 15px 16px)",
+              "repeating-linear-gradient(0deg, transparent 0 15px, rgba(111,85,58,0.30) 15px 16px)",
           }}
         >
           <BuilderRow label="flowers">
@@ -138,6 +144,11 @@ export function GardenScene() {
             </button>
             <LastPlanted at={lastPlanted} />
           </div>
+          {/* The post that drives the slab into the ground below. */}
+          <span
+            aria-hidden
+            className="absolute top-full left-1/2 h-[26px] w-[7px] -translate-x-1/2 border-x-2 border-[#6f553a] bg-[#a3835c]"
+          />
         </div>
       </div>
 
