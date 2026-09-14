@@ -2,10 +2,10 @@ import Image from "next/image";
 import Link from "next/link";
 
 const NAV = [
-  { label: "About", href: "#about" },
-  { label: "No-Code", href: "#no-code" },
-  { label: "Product + UX", href: "#product-ux" },
+  { label: "Work", href: "#work" },
+  { label: "Play", href: "#play" },
   { label: "Writing", href: "#writing" },
+  { label: "Resume", href: "#resume" },
 ];
 
 export function SiteHeader() {
