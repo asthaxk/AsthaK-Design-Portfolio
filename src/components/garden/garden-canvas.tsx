@@ -157,68 +157,79 @@ function drawPlants(g: Graphics, plants: Plant[], now: number) {
 
 /**
  * A garden that starts empty looks broken, so it opens already planted.
- * Clusters are hand-placed in grid space — each is one flower type in a
- * narrow colour family, which is what makes a group read as a clump that
- * seeded itself rather than scattered singles.
+ *
+ * Each cluster is one flower type in a narrow colour family — that is what
+ * makes a group read as a clump that seeded itself rather than scattered
+ * singles. Members are offset from the cluster centre in whole pixels rather
+ * than grid columns: a column is much narrower at the back of the plane than
+ * the front, so a column-based offset would clump far groups and scatter near
+ * ones. Offsets smaller than the 14px sprite width make blooms overlap, which
+ * is what actually reads as "together".
  */
 const CLUSTERS: {
   flower: FlowerId;
   colours: string[];
-  cells: [row: number, col: number][];
+  /** Cluster centre in grid space. */
+  at: [row: number, col: number];
+  /** Per-flower [row offset, x offset in pixels] from that centre. */
+  members: [dRow: number, dx: number][];
 }[] = [
-  // Columns are narrower at the back of the plane, so far clusters use a
-  // two-column gap and near ones a single column to clump by the same amount.
   {
     flower: "daisy",
     colours: ["#fffaf0", "#e9edc9", "#ffd166"],
-    cells: [
-      [2, 5],
-      [2, 7],
-      [3, 4],
-      [3, 6],
-      [4, 5],
+    at: [2, 6],
+    members: [
+      [0, 0],
+      [0, -9],
+      [1, -5],
+      [1, 5],
+      [2, -1],
     ],
   },
   {
     flower: "tulip",
     colours: ["#ff7b9c", "#ffa5ab", "#f72585"],
-    cells: [
-      [5, 15],
-      [5, 17],
-      [6, 14],
-      [6, 16],
-      [7, 15],
+    at: [5, 15],
+    members: [
+      [0, 0],
+      [0, -10],
+      [1, -5],
+      [1, 6],
+      [2, 1],
     ],
   },
   {
     flower: "poppy",
     colours: ["#e63946", "#d62828", "#f77f00"],
-    cells: [
-      [9, 3],
-      [9, 5],
-      [10, 2],
-      [10, 4],
-      [11, 3],
+    at: [9, 4],
+    members: [
+      [0, 0],
+      [0, -10],
+      [1, -6],
+      [1, 5],
+      [2, -2],
     ],
   },
   {
     flower: "bell",
     colours: ["#7209b7", "#4361ee", "#b5179e"],
-    cells: [
-      [9, 15],
-      [9, 17],
-      [10, 15],
-      [10, 17],
-      [11, 16],
+    at: [9, 16],
+    members: [
+      [0, 0],
+      [0, -9],
+      [1, -4],
+      [1, 6],
+      [2, 0],
     ],
   },
   {
     flower: "sprout",
     colours: ["#90e0ef", "#4cc9f0"],
-    cells: [
-      [7, 9],
-      [7, 11],
-      [8, 10],
+    at: [7, 10],
+    members: [
+      [0, 0],
+      [0, -8],
+      [1, -4],
     ],
   },
 ];
@@ -231,17 +242,18 @@ function cellPlant(
   colour: string,
   plantedAt: number,
   plane: PlaneId,
+  dx = 0,
 ): Plant {
   const t = (row + 0.5) / ROWS;
   const e = edgesAt(t, plane);
   return {
     flower,
     colour,
-    x: e.left + ((col + 0.5) / COLS) * (e.right - e.left),
+    x: e.left + ((col + 0.5) / COLS) * (e.right - e.left) + dx,
     y: t * GH,
     t,
     plantedAt,
-    jitter: ((row * 7 + col * 13) % 10) / 10 * Math.PI * 2,
+    jitter: (((row * 7 + col * 13 + Math.round(dx)) % 10) + 10) % 10 / 10 * Math.PI * 2,
   };
 }
 
@@ -250,16 +262,18 @@ function seedGarden(now: number, plane: PlaneId): Plant[] {
   const out: Plant[] = [];
   let i = 0;
   for (const cluster of CLUSTERS) {
-    cluster.cells.forEach(([row, col], n) => {
+    const [baseRow, baseCol] = cluster.at;
+    cluster.members.forEach(([dRow, dx], n) => {
       out.push(
         cellPlant(
-          row,
-          col,
+          baseRow + dRow,
+          baseCol,
           cluster.flower,
           cluster.colours[n % cluster.colours.length],
           // A future timestamp simply delays the growth animation.
           now + i * 55,
           plane,
+          dx,
         ),
       );
       i++;
