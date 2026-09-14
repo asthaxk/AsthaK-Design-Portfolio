@@ -35,6 +35,28 @@ const GRASS_DARK = "#a3b18a";
 
 const GROW_MS = 450;
 
+/**
+ * The breeze arrives in gusts rather than blowing constantly — a gust every
+ * BREEZE_PERIOD_MS, easing in and out over BREEZE_GUST_MS, with the rest of
+ * the cycle still. Amplitude is tiny and the shift is rounded to whole pixels,
+ * because sub-pixel motion would smear the pixel art.
+ */
+const BREEZE_PERIOD_MS = 9000;
+const BREEZE_GUST_MS = 3600;
+const BREEZE_AMP = 1.7;
+
+/** How far a flower leans right now, in whole pixels at the top of its stem. */
+function breezeAt(now: number, x: number, jitter: number): number {
+  const phase = now % BREEZE_PERIOD_MS;
+  if (phase > BREEZE_GUST_MS) return 0;
+  // Ease the gust in and out so it never starts or stops abruptly.
+  const envelope = Math.sin((Math.PI * phase) / BREEZE_GUST_MS);
+  // Subtracting x makes the gust travel across the garden rather than hit
+  // every flower at once.
+  const wave = Math.sin(phase / 190 - x * 0.035 + jitter);
+  return BREEZE_AMP * envelope * wave;
+}
+
 type Plant = {
   flower: FlowerId;
   colour: string;
@@ -44,6 +66,8 @@ type Plant = {
   /** Depth 0 (back) to 1 (front) — drives draw order. */
   t: number;
   plantedAt: number;
+  /** Per-flower phase offset, so a gust does not move them in lockstep. */
+  jitter: number;
 };
 
 /** Left/right edges of the plane at depth t. */
@@ -97,14 +121,18 @@ function drawPlants(g: Graphics, plants: Plant[], now: number) {
 
     const originX = Math.round(p.x - (SPRITE_W * UNIT) / 2);
     const originY = Math.round(p.y - SPRITE_H * UNIT);
+    const lean = breezeAt(now, p.x, p.jitter);
 
     for (let ry = SPRITE_H - 1; ry >= SPRITE_H - visible; ry--) {
       const line = rows[ry];
+      // The base is rooted; the further up the stem, the more it leans.
+      const weight = (SPRITE_H - 1 - ry) / (SPRITE_H - 1);
+      const shift = Math.round(lean * weight) * UNIT;
       for (let rx = 0; rx < SPRITE_W; rx++) {
         const colour = charColour(line[rx], p.colour);
         if (!colour) continue;
         g.rect(
-          originX + rx * UNIT,
+          originX + rx * UNIT + shift,
           originY + ry * UNIT,
           UNIT,
           UNIT,
@@ -126,35 +154,39 @@ const CLUSTERS: {
   colours: string[];
   cells: [row: number, col: number][];
 }[] = [
+  // Columns are narrower at the back of the plane, so far clusters use a
+  // two-column gap and near ones a single column to clump by the same amount.
   {
     flower: "daisy",
     colours: ["#fffaf0", "#e9edc9", "#ffd166"],
     cells: [
-      [2, 4],
-      [2, 6],
-      [3, 3],
-      [3, 5],
-      [4, 4],
+      [2, 5],
+      [2, 7],
+      [3, 4],
+      [3, 6],
+      [4, 5],
     ],
   },
   {
     flower: "tulip",
     colours: ["#ff7b9c", "#ffa5ab", "#f72585"],
     cells: [
-      [4, 14],
-      [5, 13],
-      [5, 16],
-      [6, 15],
+      [5, 15],
+      [5, 17],
+      [6, 14],
+      [6, 16],
+      [7, 15],
     ],
   },
   {
     flower: "poppy",
     colours: ["#e63946", "#d62828", "#f77f00"],
     cells: [
-      [8, 3],
-      [9, 2],
+      [9, 3],
       [9, 5],
+      [10, 2],
       [10, 4],
+      [11, 3],
     ],
   },
   {
@@ -162,7 +194,8 @@ const CLUSTERS: {
     colours: ["#7209b7", "#4361ee", "#b5179e"],
     cells: [
       [9, 15],
-      [10, 14],
+      [9, 17],
+      [10, 15],
       [10, 17],
       [11, 16],
     ],
@@ -171,9 +204,9 @@ const CLUSTERS: {
     flower: "sprout",
     colours: ["#90e0ef", "#4cc9f0"],
     cells: [
-      [6, 9],
-      [7, 10],
-      [7, 8],
+      [7, 9],
+      [7, 11],
+      [8, 10],
     ],
   },
 ];
@@ -195,6 +228,7 @@ function cellPlant(
     y: t * GH,
     t,
     plantedAt,
+    jitter: ((row * 7 + col * 13) % 10) / 10 * Math.PI * 2,
   };
 }
 
@@ -300,6 +334,7 @@ export function GardenCanvas({
           y: rowT * GH,
           t: rowT,
           plantedAt: performance.now(),
+          jitter: ((col * 13 + row * 7) % 10) / 10 * Math.PI * 2,
         });
       };
 
