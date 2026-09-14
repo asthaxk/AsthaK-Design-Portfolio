@@ -13,7 +13,7 @@ const silkscreen = Silkscreen({
 export const metadata: Metadata = {
   title: "Astha Khurana",
   description:
-    "Product Designer and UX Specialist. Freelancing, building no-code websites and designing products at SaaS startups.",
+    "Design leader and 0-1 specialist. Building AI tools used in thousands of Indian courtrooms at Adalat AI.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

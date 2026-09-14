@@ -22,38 +22,41 @@ export function Hero() {
         </div>
 
         <h1 className="mt-[clamp(16px,4vh,40px)] text-[clamp(20px,2.4vh,24px)] leading-[1] font-bold text-ink">
-          Hi! I&rsquo;m Astha <span aria-hidden>👋</span>
+          Hi! I&rsquo;m Astha :)
         </h1>
         <p className="mt-[clamp(8px,1.4vh,14px)] max-w-[613px] text-[clamp(16px,2vh,20px)] leading-[1.4] text-ink">
-          A seasoned Product Designer, UX Specialist and chai-lover ☕️ Spending
-          my days freelancing, discovering good food all over India and building
-          a yoga practice
+          Design leader, 0-1 specialist and chai-lover. Building AI tools used
+          in thousands of Indian courtrooms at Adalat AI.
         </p>
 
         <ul className="mt-[clamp(18px,4.9vh,48px)] max-w-[787px] space-y-[clamp(6px,1.4vh,14px)] text-[clamp(16px,2vh,20px)] leading-[1.4] text-ink">
           <li>
-            <span aria-hidden>👩🏼‍💻</span>{" "}
-            <Link href="#no-code" className="underline decoration-solid">
-              Building no-code websites
+            <span aria-hidden>&rarr;</span> Hiring for my team at{" "}
+            <Link
+              href="https://adalat.ai/careers"
+              className="underline decoration-solid"
+            >
+              Adalat AI
             </Link>
           </li>
           <li>
-            <span aria-hidden>🎨</span> Designing products at SaaS startups
+            <span aria-hidden>&rarr;</span> Mentoring junior designers at{" "}
+            <Link href="#adplist" className="underline decoration-solid">
+              adplist
+            </Link>
           </li>
           <li>
-            <span aria-hidden>✍🏼</span> Advocating for design in product teams:{" "}
-            <Link href="#twitter" className="underline decoration-solid">
-              Twitter
+            <span aria-hidden>&rarr;</span> Advocating for design in product
+            teams on{" "}
+            <Link href="#linkedin" className="underline decoration-solid">
+              Linkedin
             </Link>{" "}
-            and{" "}
-            <Link href="#newsletter" className="underline decoration-solid">
-              Newsletter
-            </Link>
+            and Substack (coming soon)
           </li>
         </ul>
 
         <p className="mt-[clamp(16px,4.5vh,44px)] max-w-[652px] text-[clamp(16px,2vh,20px)] leading-[1.4] text-ink">
-          Open to new projects! Want to work together or just chat about design?
+          Building for unexplored audiences? Or just want to chat about design?
         </p>
 
         <Link
