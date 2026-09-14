@@ -3,25 +3,7 @@ import Link from "next/link";
 
 export function Hero() {
   return (
-    <section className="relative flex flex-1 items-center overflow-hidden">
-      {/* Figma: #f9efdd rect, 100px blur — soft cream field that falls off at the edges */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 bg-glow blur-[100px]"
-      />
-
-      {/* Dot grid over the cream field, under the content */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0"
-        style={{
-          backgroundImage:
-            "radial-gradient(rgba(0,0,0,0.3) 1px, transparent 1px)",
-          backgroundSize: "24px 24px",
-        }}
-      />
-
-      <div className="relative mx-auto w-full max-w-rail px-4 py-[clamp(24px,5vh,56px)] sm:px-8">
+    <div className="pointer-events-auto relative max-w-[560px]">
         {/*
           Outer box is 118px at the design height and shrinks with the viewport.
           The leaf keeps Figma's crop as percentages of that box — 244/118 and
@@ -81,7 +63,6 @@ export function Hero() {
         >
           Book a Call
         </Link>
-      </div>
-    </section>
+    </div>
   );
 }

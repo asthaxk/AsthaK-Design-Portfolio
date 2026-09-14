@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { Application, Container, Graphics } from "pixi.js";
+import { breezeAt } from "./breeze";
 import {
   FLOWERS,
   SPRITE_H,
@@ -49,27 +50,6 @@ const GRASS_DARK = "#a3b18a";
 
 const GROW_MS = 450;
 
-/**
- * The breeze arrives in gusts rather than blowing constantly — a gust every
- * BREEZE_PERIOD_MS, easing in and out over BREEZE_GUST_MS, with the rest of
- * the cycle still. Amplitude is tiny and the shift is rounded to whole pixels,
- * because sub-pixel motion would smear the pixel art.
- */
-const BREEZE_PERIOD_MS = 9000;
-const BREEZE_GUST_MS = 3600;
-const BREEZE_AMP = 1.7;
-
-/** How far a flower leans right now, in whole pixels at the top of its stem. */
-function breezeAt(now: number, x: number, jitter: number): number {
-  const phase = now % BREEZE_PERIOD_MS;
-  if (phase > BREEZE_GUST_MS) return 0;
-  // Ease the gust in and out so it never starts or stops abruptly.
-  const envelope = Math.sin((Math.PI * phase) / BREEZE_GUST_MS);
-  // Subtracting x makes the gust travel across the garden rather than hit
-  // every flower at once.
-  const wave = Math.sin(phase / 190 - x * 0.035 + jitter);
-  return BREEZE_AMP * envelope * wave;
-}
 
 type Plant = {
   flower: FlowerId;
