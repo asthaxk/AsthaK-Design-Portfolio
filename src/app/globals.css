@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+@theme {
+  /* Figma: Gray/800, Error/25 */
+  --color-ink: #1d2939;
+  --color-cream: #fffbfa;
+  --color-glow: #f9efdd;
+
+  --font-sans: var(--font-karla), ui-sans-serif, system-ui, sans-serif;
+  --font-ui: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  /* Figma: Shadow/xs, Shadow/2xl */
+  --shadow-xs-token: 0 1px 2px 0 rgb(16 24 40 / 0.05);
+  --shadow-2xl-token: 0 24px 48px -12px rgb(16 24 40 / 0.18);
+
+  /* Header/footer rail width from the 1280px frame */
+  --spacing-rail: 1280px;
+}
+
+body {
+  background: #ffffff;
+  color: var(--color-ink);
+}
