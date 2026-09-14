@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import { useState } from "react";
 import { COLOURS, FLOWERS, type FlowerId } from "./sprites";
+import type { PlaneId } from "./garden-canvas";
 import { FlowerIcon } from "./flower-icon";
 import { PixelDisc } from "./pixel-disc";
 
@@ -12,7 +13,7 @@ const GardenCanvas = dynamic(
   { ssr: false, loading: () => <div className="aspect-[362/158] w-full" /> },
 );
 
-export function Garden() {
+export function Garden({ plane = "trapezoid" }: { plane?: PlaneId }) {
   const [flower, setFlower] = useState<FlowerId>("daisy");
   const [colour, setColour] = useState(COLOURS[0]);
 
@@ -74,7 +75,7 @@ export function Garden() {
         <p className="mb-2 text-center font-pixel text-[11px] text-ink/70">
           Double click anywhere in the garden to plant a flower
         </p>
-        <GardenCanvas flower={flower} colour={colour} />
+        <GardenCanvas flower={flower} colour={colour} plane={plane} />
       </div>
     </div>
   );
