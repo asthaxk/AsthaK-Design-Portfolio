@@ -8,8 +8,8 @@
  */
 export type FlowerId = "daisy" | "tulip" | "poppy" | "bell" | "sprout";
 
-export const STEM = "#3a7d44";
-export const LEAF = "#52b788";
+export const STEM = "#7a9068";
+export const LEAF = "#93aa79";
 export const CENTRE_BRIGHT = "#ffd166";
 export const CENTRE_DARK = "#2b1a0a";
 
@@ -19,7 +19,8 @@ export const FLOWERS: { id: FlowerId; name: string; rows: string[] }[] = [
     name: "Daisy",
     rows: [
       "..ppp..",
-      ".ppppp.",
+      ".phppp.",
+      "ppCCCpp",
       "ppCCCpp",
       ".ppppp.",
       "..ppp..",
@@ -27,22 +28,21 @@ export const FLOWERS: { id: FlowerId; name: string; rows: string[] }[] = [
       "..Ls...",
       "...sL..",
       "...s...",
-      "...s...",
     ],
   },
   {
     id: "tulip",
     name: "Tulip",
     rows: [
-      ".p...p.",
-      ".pp.pp.",
+      "..p.p..",
+      ".ppppp.",
+      ".phppp.",
       ".ppppp.",
       ".ppppp.",
       "..ppp..",
       "...s...",
       "..Ls...",
       "...sL..",
-      "...s...",
       "...s...",
     ],
   },
@@ -50,15 +50,15 @@ export const FLOWERS: { id: FlowerId; name: string; rows: string[] }[] = [
     id: "poppy",
     name: "Poppy",
     rows: [
-      ".ppppp.",
+      "..ppp..",
+      ".phppp.",
       "ppppppp",
-      "ppcCcpp",
-      "ppppppp",
+      "pppcppp",
       ".ppppp.",
+      "..ppp..",
       "...s...",
       "..Ls...",
       "...sL..",
-      "...s...",
       "...s...",
     ],
   },
@@ -66,15 +66,15 @@ export const FLOWERS: { id: FlowerId; name: string; rows: string[] }[] = [
     id: "bell",
     name: "Bell",
     rows: [
+      "...s...",
       "..ppp..",
-      "..ppp..",
+      ".phppp.",
       ".ppppp.",
       ".ppppp.",
-      "..p.p..",
+      "..ppp..",
       "...s...",
       "..Ls...",
       "...sL..",
-      "...s...",
       "...s...",
     ],
   },
@@ -83,14 +83,14 @@ export const FLOWERS: { id: FlowerId; name: string; rows: string[] }[] = [
     name: "Sprout",
     rows: [
       ".......",
-      ".......",
       "..ppp..",
-      ".pp.pp.",
-      "..psp..",
+      ".phppp.",
+      "..ppp..",
+      "..LsL..",
+      ".LLsLL.",
       "...s...",
       "..Ls...",
       "...sL..",
-      "...s...",
       "...s...",
     ],
   },
@@ -100,10 +100,22 @@ export const SPRITE_W = 7;
 export const SPRITE_H = 10;
 
 /** Resolve a bitmap char to a colour, or null for transparent. */
+/** Mix a colour toward white — used for the highlight pixel on each bloom. */
+export function lighten(hex: string, amount = 0.42): string {
+  const n = parseInt(hex.slice(1), 16);
+  const mix = (c: number) => Math.round(c + (255 - c) * amount);
+  const r = mix((n >> 16) & 255);
+  const g = mix((n >> 8) & 255);
+  const b = mix(n & 255);
+  return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, "0")}`;
+}
+
 export function charColour(ch: string, petal: string): string | null {
   switch (ch) {
     case "p":
       return petal;
+    case "h":
+      return lighten(petal);
     case "C":
       return CENTRE_BRIGHT;
     case "c":

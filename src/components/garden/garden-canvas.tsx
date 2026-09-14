@@ -29,9 +29,9 @@ const COLS = 20;
 /** Each sprite pixel covers this many canvas pixels, keeping flowers chunky. */
 const UNIT = 2;
 
-const GRASS_BASE = "#6a994e";
-const GRASS_LIGHT = "#7fb069";
-const GRASS_DARK = "#5b8c42";
+const GRASS_BASE = "#aebb96";
+const GRASS_LIGHT = "#c2cdac";
+const GRASS_DARK = "#a3b18a";
 
 const GROW_MS = 450;
 
