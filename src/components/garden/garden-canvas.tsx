@@ -114,6 +114,112 @@ function drawPlants(g: Graphics, plants: Plant[], now: number) {
   }
 }
 
+
+/**
+ * A garden that starts empty looks broken, so it opens already planted.
+ * Clusters are hand-placed in grid space — each is one flower type in a
+ * narrow colour family, which is what makes a group read as a clump that
+ * seeded itself rather than scattered singles.
+ */
+const CLUSTERS: {
+  flower: FlowerId;
+  colours: string[];
+  cells: [row: number, col: number][];
+}[] = [
+  {
+    flower: "daisy",
+    colours: ["#fffaf0", "#e9edc9", "#ffd166"],
+    cells: [
+      [2, 4],
+      [2, 6],
+      [3, 3],
+      [3, 5],
+      [4, 4],
+    ],
+  },
+  {
+    flower: "tulip",
+    colours: ["#ff7b9c", "#ffa5ab", "#f72585"],
+    cells: [
+      [4, 14],
+      [5, 13],
+      [5, 16],
+      [6, 15],
+    ],
+  },
+  {
+    flower: "poppy",
+    colours: ["#e63946", "#d62828", "#f77f00"],
+    cells: [
+      [8, 3],
+      [9, 2],
+      [9, 5],
+      [10, 4],
+    ],
+  },
+  {
+    flower: "bell",
+    colours: ["#7209b7", "#4361ee", "#b5179e"],
+    cells: [
+      [9, 15],
+      [10, 14],
+      [10, 17],
+      [11, 16],
+    ],
+  },
+  {
+    flower: "sprout",
+    colours: ["#90e0ef", "#4cc9f0"],
+    cells: [
+      [6, 9],
+      [7, 10],
+      [7, 8],
+    ],
+  },
+];
+
+/** Place a flower on the perspective grid at the given row and column. */
+function cellPlant(
+  row: number,
+  col: number,
+  flower: FlowerId,
+  colour: string,
+  plantedAt: number,
+): Plant {
+  const t = (row + 0.5) / ROWS;
+  const e = edgesAt(t);
+  return {
+    flower,
+    colour,
+    x: e.left + ((col + 0.5) / COLS) * (e.right - e.left),
+    y: t * GH,
+    t,
+    plantedAt,
+  };
+}
+
+/** Seeded plantings, staggered so the garden grows in when the page opens. */
+function seedGarden(now: number): Plant[] {
+  const out: Plant[] = [];
+  let i = 0;
+  for (const cluster of CLUSTERS) {
+    cluster.cells.forEach(([row, col], n) => {
+      out.push(
+        cellPlant(
+          row,
+          col,
+          cluster.flower,
+          cluster.colours[n % cluster.colours.length],
+          // A future timestamp simply delays the growth animation.
+          now + i * 55,
+        ),
+      );
+      i++;
+    });
+  }
+  return out;
+}
+
 export function GardenCanvas({
   flower,
   colour,
@@ -160,6 +266,8 @@ export function GardenCanvas({
 
       const scene = new Container();
       instance.stage.addChild(scene);
+
+      plants.push(...seedGarden(performance.now()));
 
       const ground = new Graphics();
       const flowersLayer = new Graphics();
