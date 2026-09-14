@@ -23,6 +23,22 @@ const GW = 362;
 const GH = 158;
 
 /**
+ * The plane is inset inside the canvas rather than filling it: the ground used
+ * to run flush to the right edge, which read as cut off rather than as a
+ * garden with a boundary. The margin also gives the fence room to stand.
+ */
+const PLANE_TOP = 18;
+const PLANE_H = 132;
+
+/** Screen y for a depth t, and back again. */
+function yAt(t: number) {
+  return PLANE_TOP + t * PLANE_H;
+}
+function tAt(y: number) {
+  return (y - PLANE_TOP) / PLANE_H;
+}
+
+/**
  * Two ground plans, both 362x158 in internal pixels. Each returns the left and
  * right edge of the plane at depth t, where 0 is the back and 1 the front —
  * everything else in the garden is expressed against these edges, so a new
@@ -33,19 +49,23 @@ export type PlaneId = "trapezoid" | "wedge";
 const PLANES: Record<PlaneId, (t: number) => { left: number; right: number }> = {
   // Symmetric: both edges converge toward the back.
   trapezoid: (t) => {
-    const half = 71 + (181 - 71) * t;
-    const cx = 167 + (181 - 167) * t;
+    const half = 68 + (172 - 68) * t;
+    const cx = 174 + (176 - 174) * t;
     return { left: cx - half, right: cx + half };
   },
-  // Figma "M298 0 H483 V209.5 H0 L298 0 Z" scaled to the internal plane: the
-  // right edge stays vertical while the left edge recedes on the diagonal.
-  wedge: (t) => ({ left: 223.4 * (1 - t), right: 362 }),
+  // Figma "M298 0 H483 V209.5 H0 L298 0 Z", scaled and inset: the right edge
+  // stays vertical while the left edge recedes on the diagonal.
+  wedge: (t) => ({ left: 214 - 210 * t, right: 348 }),
 };
 
 const ROWS = 12;
 const COLS = 20;
 /** Each sprite pixel covers this many canvas pixels, keeping flowers chunky. */
 const UNIT = 2;
+
+const POST = "#8a6b4a";
+const RAIL = "#a3835c";
+const POST_SHADE = "#6f553a";
 
 const GRASS_BASE = "#aebb96";
 const GRASS_LIGHT = "#c2cdac";
@@ -83,8 +103,8 @@ function drawGround(g: Graphics, plane: PlaneId) {
     const t1 = (r + 1) / ROWS;
     const a = edgesAt(t0, plane);
     const b = edgesAt(t1, plane);
-    const y0 = Math.round(t0 * GH);
-    const y1 = Math.round(t1 * GH);
+    const y0 = Math.round(yAt(t0));
+    const y1 = Math.round(yAt(t1));
 
     g.poly([a.left, y0, a.right, y0, b.right, y1, b.left, y1]).fill(
       r % 2 === 0 ? GRASS_BASE : GRASS_DARK,
@@ -95,7 +115,7 @@ function drawGround(g: Graphics, plane: PlaneId) {
     for (let s = 0; s < speckles; s++) {
       const f = (s * 7919 + r * 104729) % 1000 / 1000;
       const y = y0 + ((y1 - y0) * ((s * 31 + r * 17) % 10)) / 10;
-      const tt = y / GH;
+      const tt = tAt(y);
       const e = edgesAt(tt, plane);
       const x = Math.round(e.left + (e.right - e.left) * f);
       g.rect(x, Math.round(y), 1, 1).fill(
@@ -128,6 +148,49 @@ function drawSprite(
       g.rect(originX + rx * UNIT + shift, originY + ry * UNIT, UNIT, UNIT).fill(
         colour,
       );
+    }
+  }
+}
+
+/**
+ * A low fence around the back and sides. Posts grow taller toward the front so
+ * the fence shares the plane's perspective, and it is drawn into the ground
+ * layer so flowers planted inside stand in front of it.
+ *
+ * The front edge is deliberately left open — a rail across it would cross the
+ * nearest flowers and shut the viewer out of the garden.
+ */
+function drawFence(g: Graphics, plane: PlaneId) {
+  const SAMPLES = 160;
+
+  // Each edge as a function of how far along it we are.
+  const edges: ((f: number) => { x: number; y: number; t: number })[] = [
+    // Back edge, straight across the far end.
+    (f) => {
+      const e = edgesAt(0, plane);
+      return { x: e.left + (e.right - e.left) * f, y: yAt(0), t: 0 };
+    },
+    // Left edge, following the diagonal down toward the viewer.
+    (f) => ({ x: edgesAt(f, plane).left, y: yAt(f), t: f }),
+    // Right edge.
+    (f) => ({ x: edgesAt(f, plane).right, y: yAt(f), t: f }),
+  ];
+
+  for (const edge of edges) {
+    for (let i = 0; i <= SAMPLES; i++) {
+      const p = edge(i / SAMPLES);
+      const h = 7 + Math.round(4 * p.t);
+      const x = Math.round(p.x);
+      const y = Math.round(p.y);
+
+      // Two rails, drawn as a dense run of pixels so they follow the edge.
+      g.rect(x, y - h + 3, 1, 1).fill(RAIL);
+      g.rect(x, y - h + 6, 1, 1).fill(RAIL);
+
+      if (i % 12 === 0) {
+        g.rect(x, y - h, 2, h).fill(POST);
+        g.rect(x, y - 1, 2, 1).fill(POST_SHADE);
+      }
     }
   }
 }
@@ -318,7 +381,7 @@ function cellPlant(
     flower,
     colour,
     x,
-    y: t * GH,
+    y: yAt(t),
     t,
     plantedAt,
     jitter: (((row * 7 + col * 13 + Math.round(dx)) % 10) + 10) % 10 / 10 * Math.PI * 2,
@@ -426,14 +489,14 @@ export function GardenCanvas({
       const flowersLayer = new Graphics();
       scene.addChild(ground, flowersLayer);
       drawGround(ground, plane);
+      drawFence(ground, plane);
 
       const plant = (event: MouseEvent) => {
         const rect = canvas.getBoundingClientRect();
         const x = ((event.clientX - rect.left) / rect.width) * GW;
         const y = ((event.clientY - rect.top) / rect.height) * GH;
-        if (y < 0 || y > GH) return;
-
-        const t = y / GH;
+        const t = tAt(y);
+        if (t < 0 || t > 1) return;
         const { left, right } = edgesAt(t, plane);
         if (x < left || x > right) return; // outside the plane
 
@@ -451,7 +514,7 @@ export function GardenCanvas({
         const base = {
           colour: current.kind === "flower" ? current.colour : "#ffffff",
           x: e.left + ((col + 0.5) / COLS) * (e.right - e.left),
-          y: rowT * GH,
+          y: yAt(rowT),
           t: rowT,
           plantedAt: performance.now(),
           jitter,
