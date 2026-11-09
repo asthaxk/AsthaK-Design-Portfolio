@@ -293,7 +293,7 @@ const CLUSTERS: {
 }[] = [
   {
     flower: "daisy",
-    colours: ["#fffaf0", "#e9edc9", "#ffd166"],
+    colours: ["#fdfbf3", "#f5ecd9", "#f2c75c"],
     at: [2, 6],
     members: [
       [0, 0],
@@ -305,7 +305,7 @@ const CLUSTERS: {
   },
   {
     flower: "tulip",
-    colours: ["#ff7b9c", "#ffa5ab", "#f72585"],
+    colours: ["#e78fa6", "#b85688", "#e78fa6"],
     at: [5, 15],
     members: [
       [0, 0],
@@ -317,7 +317,7 @@ const CLUSTERS: {
   },
   {
     flower: "poppy",
-    colours: ["#e63946", "#d62828", "#f77f00"],
+    colours: ["#d05a4c", "#e8954f", "#d05a4c"],
     at: [9, 4],
     members: [
       [0, 0],
@@ -329,7 +329,7 @@ const CLUSTERS: {
   },
   {
     flower: "bell",
-    colours: ["#7209b7", "#4361ee", "#b5179e"],
+    colours: ["#8d6cb3", "#5e8ec2", "#b85688"],
     at: [9, 16],
     members: [
       [0, 0],
@@ -341,7 +341,7 @@ const CLUSTERS: {
   },
   {
     flower: "sprout",
-    colours: ["#90e0ef", "#4cc9f0"],
+    colours: ["#5e8ec2", "#f5ecd9"],
     at: [7, 10],
     members: [
       [0, 0],

@@ -188,17 +188,25 @@ export function charColour(ch: string, petal: string): string | null {
   }
 }
 
-/** 18 petal colours — two columns of nine, echoing the logo's bloom. */
+/**
+ * Nine petal colours chosen against the sage turf rather than against white.
+ *
+ * The old set came from the logo's bloom — electric pink, indigo, cyan — which
+ * are far more saturated than the ground they sit on and read as stickers on
+ * the grass. These are muted and warm-leaning, so they separate from the green
+ * without shouting over it: reds and corals sit opposite sage on the wheel,
+ * cream and butter pick up its warmth, and the cooler violets stay dusty.
+ */
 export const COLOURS = [
-  "#f72585", "#ff4d6d",
-  "#b5179e", "#ff7b9c",
-  "#7209b7", "#ffa5ab",
-  "#3a0ca3", "#ffd6e0",
-  "#4361ee", "#e63946",
-  "#4cc9f0", "#d62828",
-  "#90e0ef", "#f77f00",
-  "#e9edc9", "#fcbf49",
-  "#fffaf0", "#ffd166",
+  "#e78fa6", // blush
+  "#b85688", // mulberry
+  "#8d6cb3", // lilac
+  "#5e8ec2", // dusty blue
+  "#d05a4c", // brick
+  "#e8954f", // apricot
+  "#f2c75c", // butter
+  "#f5ecd9", // cream
+  "#fdfbf3", // white
 ];
 
 /** A chunky 9x9 disc, so swatches read as pixel art rather than CSS circles. */
